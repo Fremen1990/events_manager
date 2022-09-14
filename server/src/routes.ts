@@ -5,8 +5,6 @@ import { check } from "express-validator";
 function routes(app: Express) {
   app.get("/api", EventController.welcomeHandler);
 
-  app.get("/api/events/all", EventController.getAllEventsHanlder);
-
   app.post(
     "/api/events",
     check("firstName")
@@ -34,6 +32,10 @@ function routes(app: Express) {
       .withMessage("Must be a valid date"),
     EventController.addEventHandler
   );
+
+  app.get("/api/events/all", EventController.getAllEventsHanlder);
+
+  app.get("/api/events/:id", EventController.getEventByIdHandler);
 }
 
 export default routes;

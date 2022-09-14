@@ -24,4 +24,13 @@ async function getAllEvents(): Promise<EventTypes[]> {
   return events;
 }
 
-export default { welcome, getAllEvents, addEvent };
+async function getEventById(id: string): Promise<any> {
+  const event = await Event.findOne({ where: { id } });
+  if (event) {
+    return event;
+  } else {
+    return { message: "Event not found" };
+  }
+}
+
+export default { welcome, getAllEvents, addEvent, getEventById };

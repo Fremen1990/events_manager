@@ -19,13 +19,27 @@ async function addEventHandler(req: Request, res: Response) {
     const event = await EventService.addEvent(req.body);
     res.status(201).json({ message: "Event added", event: { ...event } });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json(error);
   }
 }
 
 async function getAllEventsHanlder(req: Request, res: Response) {
   const events = await EventService.getAllEvents();
-  res.send(events);
+  res.json(events);
 }
 
-export default { welcomeHandler, getAllEventsHanlder, addEventHandler };
+async function getEventByIdHandler(req: Request, res: Response) {
+  const id = req.params.id;
+  const event = await EventService.getEventById(id);
+  if (event.message) {
+    return res.status(404).json(event.message);
+  }
+  res.json(event);
+}
+
+export default {
+  welcomeHandler,
+  getAllEventsHanlder,
+  addEventHandler,
+  getEventByIdHandler,
+};

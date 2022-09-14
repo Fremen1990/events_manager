@@ -97,7 +97,6 @@ describe("Events integration tests", () => {
       const response = await request(app)
         .post("/api/eventsasdtht")
         .send(validEvent);
-      console.log("response", response);
       expect(response.statusCode).toBe(404);
     });
   });
@@ -116,8 +115,55 @@ describe("Events integration tests", () => {
     });
   });
 
-  // describe("GET ONE /api/events/:id", async () => {
-  //   const newEvent = await postEvent(validEvent);
-  //   // const eventById = await Event.findOne({ where: { id:newEvent.event.id  } });
-  // });
+  describe("GET ONE /api/events/:id", () => {
+    it("returns status code 404 when event with given id do not exist", async () => {
+      const newEvent = await postEvent(validEvent);
+      const eventId = newEvent.body.event.id;
+      const eventById = await request(app).get(`/api/events/5353636`);
+      expect(eventById.statusCode).toBe(404);
+    });
+
+    it("returns status code 200 when event with given id exists", async () => {
+      const newEvent = await postEvent(validEvent);
+      const eventId = newEvent.body.event.id;
+      const EventByIdResponse = await request(app).get(
+        `/api/events/${eventId}`
+      );
+      expect(EventByIdResponse.statusCode).toBe(200);
+    });
+
+    it("returns event author first and last name from given event id", async () => {
+      const newEvent = await postEvent(validEvent);
+      const eventId = newEvent.body.event.id;
+      const EventByIdResponse = await request(app).get(
+        `/api/events/${eventId}`
+      );
+      expect(EventByIdResponse.body.firstName).toEqual(
+        newEvent.body.event.firstName
+      );
+      expect(EventByIdResponse.body.lastName).toEqual(
+        newEvent.body.event.lastName
+      );
+    });
+
+    it("returns event author email from given event id", async () => {
+      const newEvent = await postEvent(validEvent);
+      const eventId = newEvent.body.event.id;
+      const EventByIdResponse = await request(app).get(
+        `/api/events/${eventId}`
+      );
+      expect(EventByIdResponse.body.email).toEqual(newEvent.body.event.email);
+    });
+
+    it("returns event date name from given event id", async () => {
+      const newEvent = await postEvent(validEvent);
+      const eventId = newEvent.body.event.id;
+      const EventByIdResponse = await request(app).get(
+        `/api/events/${eventId}`
+      );
+      expect(EventByIdResponse.body.eventDate).toEqual(
+        newEvent.body.event.eventDate
+      );
+    });
+  });
 });
