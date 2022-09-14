@@ -1,0 +1,36 @@
+- Work plan in trello 
+
+BE
+- information about typescript
+- node app initialization
+- git-hub initialization with git-flow
+- install and config elint, prettier, husky  
+- draw project flow structure
+- draw catalog structure
+- MongoDB init cloud
+- Postman collection
+- create ReadMe with instruction how to clone, install, install DB and RUN tests
+
+
+FE
+- find best date picker react npm 
+- FE validation - react hook form
+- LightHouse tests
+
+RECORD DEMO
+
+
+The application should allow a user to add an event to the database, with the following fields:
+● First name (required) 
+● Last name (required) 
+● Email (required, valid email address)
+● Event date (required, simple date picker
+
+What's essential for us?:
+● Tests for frontend and backend 
+● Data validation on frontend and backend
+● Error handling 
+● State management on frontend (form and request lifecycle state) 
+● Readme with all information needed to install and run the app, run tests 
+● Catalogs and components structure
+● Code readability and extensibility

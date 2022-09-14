@@ -1,0 +1,10 @@
+{
+  "database": {
+    "database":"addEventDB",
+    "username": "admin",
+    "password": "secret",
+    "dialect": "sqlite",
+    "storage": ":memory:",
+    "logging": false
+  }
+}

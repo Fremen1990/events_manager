@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "c54eab53-3784-4835-a40b-38d3650335ed",
+		"name": "EventsManager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15888743"
+	},
+	"item": [
+		{
+			"name": "Hi",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{ApiUrl}}",
+					"host": [
+						"{{ApiUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET ALL EVENTS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{ApiUrl}}/events/all",
+					"host": [
+						"{{ApiUrl}}"
+					],
+					"path": [
+						"events",
+						"all"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ApiUrl",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		}
+	]
+}
