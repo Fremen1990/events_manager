@@ -43,6 +43,7 @@
     "testEnvironment": "node",
     "resetMocks": true,
     "clearMocks": true,
-    "verbose": true
+    "verbose": true,
+    "testTimeout": 10000
   }
 }

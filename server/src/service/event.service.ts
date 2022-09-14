@@ -33,4 +33,14 @@ async function getEventById(id: string): Promise<any> {
   }
 }
 
-export default { welcome, getAllEvents, addEvent, getEventById };
+async function updateEvent(id: string, event: EventTypes): Promise<any> {
+  const eventToUpdate = await Event.findOne({ where: { id } });
+  if (eventToUpdate) {
+    const updatedEvent = await eventToUpdate.update(event);
+    return updatedEvent;
+  } else {
+    return { message: "Event not found" };
+  }
+}
+
+export default { welcome, getAllEvents, addEvent, getEventById, updateEvent };

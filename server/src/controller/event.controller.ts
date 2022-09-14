@@ -37,9 +37,30 @@ async function getEventByIdHandler(req: Request, res: Response) {
   res.json(event);
 }
 
+async function updateEventHandler(req: Request, res: Response) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = errors.array()[0];
+    return res
+      .status(400)
+      .json({ error: { value: error.value }, message: error.msg });
+  }
+  const id = req.params.id;
+  try {
+    const event = await EventService.updateEvent(id, req.body);
+    if (event.message) {
+      return res.status(404).json(event.message);
+    }
+    res.json({ message: "Event updated", event: { ...event } });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+}
+
 export default {
   welcomeHandler,
   getAllEventsHanlder,
   addEventHandler,
   getEventByIdHandler,
+  updateEventHandler,
 };

@@ -117,8 +117,6 @@ describe("Events integration tests", () => {
 
   describe("GET ONE /api/events/:id", () => {
     it("returns status code 404 when event with given id do not exist", async () => {
-      const newEvent = await postEvent(validEvent);
-      const eventId = newEvent.body.event.id;
       const eventById = await request(app).get(`/api/events/5353636`);
       expect(eventById.statusCode).toBe(404);
     });
@@ -163,6 +161,111 @@ describe("Events integration tests", () => {
       );
       expect(EventByIdResponse.body.eventDate).toEqual(
         newEvent.body.event.eventDate
+      );
+    });
+  });
+
+  describe("PUT /api/events/:id", () => {
+    it("returns status code 404 when event with given id do not exist", async () => {
+      const eventById = await request(app).put(`/api/events/5353636`).send({
+        firstName: "Kazik",
+        lastName: "Kurczak",
+        email: "test@email.com",
+        eventDate: "2022-08-15",
+      });
+      expect(eventById.statusCode).toBe(404);
+    });
+
+    it.each`
+      firstName         | lastName          | email               | eventDate       | statusCode | message
+      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${200}     | ${"Event updated"}
+      ${""}             | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"First name is required"}
+      ${"a"}            | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"a".repeat(33)} | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"John"}         | ${""}             | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Last name is required"}
+      ${"John"}         | ${"a"}            | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"John"}         | ${"a".repeat(33)} | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"John"}         | ${"Doe"}          | ${""}               | ${"2022-08-15"} | ${400}     | ${"Email is required"}
+      ${"John"}         | ${"Doe"}          | ${"abc.com"}        | ${"2022-08-15"} | ${400}     | ${"Must be a valid email address"}
+      ${"John"}         | ${"Doe"}          | ${"abc@com"}        | ${"2022-08-15"} | ${400}     | ${"Must be a valid email address"}
+      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${""}           | ${400}     | ${"Date is required"}
+      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${"not-a-date"} | ${400}     | ${"Must be a valid date"}
+    `(
+      "(VALIDATION) returns status code: $statusCode and message: $message when given $firstName, $lastName, $email, $eventDate",
+      async ({
+        firstName,
+        lastName,
+        email,
+        eventDate,
+        statusCode,
+        message,
+      }) => {
+        const newEvent = await postEvent(validEvent);
+        const eventId = newEvent.body.event.id;
+        const EventByIdUpdateResponse = await request(app)
+          .put(`/api/events/${eventId}`)
+          .send({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            eventDate: eventDate,
+          });
+
+        expect(EventByIdUpdateResponse.statusCode).toBe(statusCode);
+        expect(EventByIdUpdateResponse.body.message).toBe(message);
+      }
+    );
+
+    it("returns updated event author first and last name from given event id", async () => {
+      const newEvent = await postEvent(validEvent);
+      const eventId = newEvent.body.event.id;
+      const EventByIdResponse = await request(app)
+        .put(`/api/events/${eventId}`)
+        .send({
+          firstName: "Kazik",
+          lastName: "Kurczak",
+          email: "Kazik@kurczak.com",
+          eventDate: "2022-08-15",
+        });
+      console.log("RES BODY", EventByIdResponse.body);
+      console.log("RES STATUS CODE", EventByIdResponse.statusCode);
+      expect(EventByIdResponse.body.event.dataValues.firstName).toEqual(
+        "Kazik"
+      );
+      expect(EventByIdResponse.body.event.dataValues.lastName).toEqual(
+        "Kurczak"
+      );
+    });
+
+    it("returns updated event author email from given event id", async () => {
+      const newEvent = await postEvent(validEvent);
+      const eventId = newEvent.body.event.id;
+      const EventByIdResponse = await request(app)
+        .put(`/api/events/${eventId}`)
+        .send({
+          firstName: "Kazik",
+          lastName: "Kurczak",
+          email: "test@email.com",
+          eventDate: "2022-08-15",
+        });
+      expect(EventByIdResponse.body.event.dataValues.email).toEqual(
+        "test@email.com"
+      );
+    });
+
+    it("returns updated event date name from given event id", async () => {
+      const newEvent = await postEvent(validEvent);
+      const eventId = newEvent.body.event.id;
+      const EventByIdResponse = await request(app)
+        .put(`/api/events/${eventId}`)
+        .send({
+          firstName: "Kazik",
+          lastName: "Kurczak",
+          email: "Kazik@kurczak.com",
+          eventDate: "2022-08-15",
+        });
+      expect(EventByIdResponse.body.event.dataValues.eventDate).toEqual(
+        "2022-08-15T00:00:00.000Z"
       );
     });
   });
