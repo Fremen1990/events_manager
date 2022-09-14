@@ -85,6 +85,14 @@ describe("Events integration tests", () => {
       expect(events[0].eventDate).toBeDefined();
     });
 
+    it("creates new Event with unique ID", async () => {
+      await postEvent(validEvent);
+      const events = await Event.findAll();
+      expect(events[0].id).toBeTruthy();
+      expect(events[0].id).not.toBe(null);
+      expect(events[0].id.length).toEqual(36);
+    });
+
     it("returns status code 404 when given invalid url", async () => {
       const response = await request(app)
         .post("/api/eventsasdtht")

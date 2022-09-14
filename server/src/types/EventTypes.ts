@@ -8,6 +8,7 @@ export interface EventTypes {
 export interface EventResponseTypes {
   message: string;
   event: {
+    id: string;
     message: string;
     firstName: string;
     lastName: string;
