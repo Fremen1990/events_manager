@@ -1,3 +1,6 @@
+import Event from "../model/Event.model";
+import { EventResponseTypes, EventTypes } from "../types/EventTypes";
+
 async function welcome() {
   return {
     message: "Hello in my AddEvent API!! :)",
@@ -24,16 +27,13 @@ async function getAllEvents() {
   return events;
 }
 
-interface Event {
-  firstName: string;
-  lastName: string;
-  email: string;
-  eventDate: string;
-}
-
-async function addEvent(event: Event) {
-  const response = { message: "Event added", event: { ...event } };
-  return response;
+async function addEvent(event: EventTypes) {
+  try {
+    await Event.create(event);
+    return event;
+  } catch (error) {
+    return error;
+  }
 }
 
 export default { welcome, getAllEvents, addEvent };

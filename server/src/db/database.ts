@@ -9,33 +9,26 @@ interface Database {
   storage: string;
   logging: boolean;
 }
-// const dbConfig = config.get<Database>("database");
-//
-// const sequelize = new Sequelize(
-//   dbConfig.database,
-//   dbConfig.username,
-//   dbConfig.password,
-//   {
-//     dialect: dbConfig.dialect,
-//     storage: dbConfig.storage,
-//     logging: dbConfig.logging,
-//   }
-// );
+const dbConfig = config.get<Database>("database");
 
-const sequelize = new Sequelize("addEvent", "admin", "password123", {
-  dialect: "sqlite",
-  storage: "./database.sqlite",
-  logging: false,
-});
+const sequelize = new Sequelize(
+  dbConfig.database,
+  dbConfig.username,
+  dbConfig.password,
+  {
+    dialect: dbConfig.dialect,
+    storage: dbConfig.storage,
+    logging: dbConfig.logging,
+  }
+);
+
 export default sequelize;
 
-// (async () => {
-//   try {
-//     await sequelize.authenticate();
-//     console.log(
-//       "Connection to Sqlite through Sequelize has been established successfully."
-//     );
-//   } catch (error) {
-//     console.error("Unable to connect to the database:", error);
-//   }
-// })();
+export const dbConnectionStatus = async () => {
+  try {
+    await sequelize.authenticate();
+    return "Connection to the Database has been established successfully.";
+  } catch (error) {
+    return `Unable to connect to the database:\n ${error}`;
+  }
+};
