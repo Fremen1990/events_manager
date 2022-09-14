@@ -24,4 +24,16 @@ async function getAllEvents() {
   return events;
 }
 
-export default { welcome, getAllEvents };
+interface Event {
+  firstName: string;
+  lastName: string;
+  email: string;
+  eventDate: string;
+}
+
+async function addEvent(event: Event) {
+  const response = { message: "Event added", event: { ...event } };
+  return response;
+}
+
+export default { welcome, getAllEvents, addEvent };
