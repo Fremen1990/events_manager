@@ -3,6 +3,7 @@ import sequelize from "../db/database";
 import request from "supertest";
 import app from "../app";
 import Event from "../model/Event.model";
+import { EventTypes } from "../types/EventTypes";
 
 describe.skip("API status check", () => {
   it("should return 200 OK and welcome message", async () => {
@@ -26,6 +27,11 @@ describe("Events integration tests", () => {
     lastName: "Doe",
     email: "johndoe@domain.com",
     eventDate: new Date(),
+  };
+
+  const postEvent = async (event: EventTypes) => {
+    const response = await request(app).post("/api/events").send(event);
+    return response;
   };
 
   describe("POST /api/events", () => {
@@ -53,7 +59,7 @@ describe("Events integration tests", () => {
         statusCode,
         message,
       }) => {
-        const response = await request(app).post("/api/events").send({
+        const response = await postEvent({
           firstName: firstName,
           lastName: lastName,
           email: email,
@@ -65,13 +71,13 @@ describe("Events integration tests", () => {
     );
 
     it("creates new Event in Database when given valid data", async () => {
-      await request(app).post("/api/events").send(validEvent);
+      await postEvent(validEvent);
       const events = await Event.findAll();
       expect(events.length).toBe(1);
     });
 
     it("creates new Event in Database with given event data", async () => {
-      await request(app).post("/api/events").send(validEvent);
+      await postEvent(validEvent);
       const events = await Event.findAll();
       expect(events[0].firstName).toBe(validEvent.firstName);
       expect(events[0].lastName).toBe(validEvent.lastName);
@@ -87,6 +93,7 @@ describe("Events integration tests", () => {
       expect(response.statusCode).toBe(404);
     });
   });
+
   describe("GET /api/events/all", () => {
     it("should return 200 OK and all events", async () => {
       const response = await request(app).get("/api/events/all");
