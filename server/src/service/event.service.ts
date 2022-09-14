@@ -1,6 +1,11 @@
-import { Request, Response } from "express";
+async function welcome() {
+  return {
+    message: "Hello in my AddEvent API!! :)",
+    status: "OK",
+  };
+}
 
-export default function getAllEvents(req: Request, res: Response) {
+async function getAllEvents() {
   const events = [
     {
       firstName: "Tomasz",
@@ -16,6 +21,7 @@ export default function getAllEvents(req: Request, res: Response) {
     },
   ];
 
-  res.statusCode = 200;
-  res.send({ events });
+  return events;
 }
+
+export default { welcome, getAllEvents };

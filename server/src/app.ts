@@ -1,15 +1,10 @@
-import express, { Request, Response } from "express";
-import getAllEvents from "./routes/events.route";
+import express  from "express";
+import routes from "./routes";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.get("/api/events/all", getAllEvents);
-
-app.get("/api", (req: Request, res: Response) =>
-  res.send({ message: "Hello in my AddEvent API!! :)" })
-);
+routes(app);
 
 // console.log(`env: ${process.env.NODE_ENV}`);
 
