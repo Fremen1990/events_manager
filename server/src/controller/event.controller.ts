@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { validationResult } from "express-validator";
 import EventService from "../service/event.service";
 
 async function welcomeHandler(req: Request, res: Response) {
@@ -8,13 +7,6 @@ async function welcomeHandler(req: Request, res: Response) {
 }
 
 async function addEventHandler(req: Request, res: Response) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = errors.array()[0];
-    return res
-      .status(400)
-      .json({ error: { value: error.value }, message: error.msg });
-  }
   try {
     const event = await EventService.addEvent(req.body);
     res.status(201).json({ message: "Event added", event: { ...event } });
@@ -38,13 +30,6 @@ async function getEventByIdHandler(req: Request, res: Response) {
 }
 
 async function updateEventHandler(req: Request, res: Response) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = errors.array()[0];
-    return res
-      .status(400)
-      .json({ error: { value: error.value }, message: error.msg });
-  }
   const id = req.params.id;
   try {
     const event = await EventService.updateEvent(id, req.body);
