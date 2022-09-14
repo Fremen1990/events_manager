@@ -64,6 +64,8 @@ function routes(app: Express) {
       .withMessage("Must be a valid date"),
     EventController.updateEventHandler
   );
+
+  app.delete("/api/events/:id", EventController.deleteEventHandler);
 }
 
 export default routes;

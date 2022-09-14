@@ -242,4 +242,30 @@ describe("Events integration tests", () => {
       );
     });
   });
+
+  describe("DELETE /api/events/:id", () => {
+    const deleteEvent = async ({
+      id = "not-a-valid-id",
+      url = "/api/events",
+    } = {}) => {
+      return request(app).delete(`${url}/${id}`);
+    };
+
+    it("returns status code 404 when event with given id do not exist", async () => {
+      const eventById = await deleteEvent();
+      expect(eventById.statusCode).toBe(404);
+    });
+
+    it("returns status code 200 and message when event with given id is deleted", async () => {
+      const { id } = await getNewEvent();
+      const eventByIdDeleteResponse = await deleteEvent({ id });
+      expect(eventByIdDeleteResponse.statusCode).toBe(200);
+    });
+
+    it("returns message Event deleted when event with given id is deleted", async () => {
+      const { id } = await getNewEvent();
+      const eventByIdDeleteResponse = await deleteEvent({ id });
+      expect(eventByIdDeleteResponse.body.message).toBe("Event deleted");
+    });
+  });
 });

@@ -43,4 +43,21 @@ async function updateEvent(id: string, event: EventTypes): Promise<any> {
   }
 }
 
-export default { welcome, getAllEvents, addEvent, getEventById, updateEvent };
+async function deleteEvent(id: string): Promise<any> {
+  const eventToDelete = await Event.findOne({ where: { id } });
+  if (eventToDelete) {
+    await eventToDelete.destroy();
+    return { message: "Event deleted" };
+  } else {
+    return { message: "Event not found" };
+  }
+}
+
+export default {
+  welcome,
+  getAllEvents,
+  addEvent,
+  getEventById,
+  updateEvent,
+  deleteEvent,
+};

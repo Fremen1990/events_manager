@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import EventService from "../service/event.service";
 import { validationResult } from "express-validator";
+import EventService from "../service/event.service";
 
 async function welcomeHandler(req: Request, res: Response) {
   const message = await EventService.welcome();
@@ -57,10 +57,24 @@ async function updateEventHandler(req: Request, res: Response) {
   }
 }
 
+async function deleteEventHandler(req: Request, res: Response) {
+  const id = req.params.id;
+  try {
+    const event = await EventService.deleteEvent(id);
+    if (event.message.includes("not found")) {
+      return res.status(404).json(event.message);
+    }
+    res.json({ message: "Event deleted", event: { ...event } });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+}
+
 export default {
   welcomeHandler,
   getAllEventsHanlder,
   addEventHandler,
   getEventByIdHandler,
   updateEventHandler,
+  deleteEventHandler,
 };
