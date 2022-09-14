@@ -30,8 +30,12 @@ describe("Events integration tests", () => {
   };
 
   const postEvent = async (event: EventTypes) => {
-    const response = await request(app).post("/api/events").send(event);
-    return response;
+    return request(app).post("/api/events").send(event);
+  };
+
+  const getNewEvent = async () => {
+    const response = await postEvent(validEvent);
+    return response.body.event;
   };
 
   describe("POST /api/events", () => {
@@ -102,15 +106,19 @@ describe("Events integration tests", () => {
   });
 
   describe("GET /api/events/all", () => {
+    const getAllEvents = async () => {
+      return request(app).get("/api/events/all");
+    };
+
     it("returns status code 200 and empty array when no events in database", async () => {
-      const response = await request(app).get("/api/events/all");
+      const response = await getAllEvents();
       expect(response.statusCode).toBe(200);
       expect(response.body).toEqual([]);
     });
 
     it("returns array with one event", async () => {
       await postEvent(validEvent);
-      const response = await request(app).get("/api/events/all");
+      const response = await getAllEvents();
       expect(response.body.length).toBe(1);
     });
   });
@@ -122,57 +130,49 @@ describe("Events integration tests", () => {
     });
 
     it("returns status code 200 when event with given id exists", async () => {
-      const newEvent = await postEvent(validEvent);
-      const eventId = newEvent.body.event.id;
-      const EventByIdResponse = await request(app).get(
-        `/api/events/${eventId}`
-      );
+      const { id } = await getNewEvent();
+      const EventByIdResponse = await request(app).get(`/api/events/${id}`);
       expect(EventByIdResponse.statusCode).toBe(200);
     });
 
     it("returns event author first and last name from given event id", async () => {
-      const newEvent = await postEvent(validEvent);
-      const eventId = newEvent.body.event.id;
-      const EventByIdResponse = await request(app).get(
-        `/api/events/${eventId}`
-      );
-      expect(EventByIdResponse.body.firstName).toEqual(
-        newEvent.body.event.firstName
-      );
-      expect(EventByIdResponse.body.lastName).toEqual(
-        newEvent.body.event.lastName
-      );
+      const { id, firstName, lastName } = await getNewEvent();
+      const EventByIdResponse = await request(app).get(`/api/events/${id}`);
+      expect(EventByIdResponse.body.firstName).toEqual(firstName);
+      expect(EventByIdResponse.body.lastName).toEqual(lastName);
     });
 
     it("returns event author email from given event id", async () => {
-      const newEvent = await postEvent(validEvent);
-      const eventId = newEvent.body.event.id;
-      const EventByIdResponse = await request(app).get(
-        `/api/events/${eventId}`
-      );
-      expect(EventByIdResponse.body.email).toEqual(newEvent.body.event.email);
+      const { id, email } = await getNewEvent();
+      const EventByIdResponse = await request(app).get(`/api/events/${id}`);
+      expect(EventByIdResponse.body.email).toEqual(email);
     });
 
     it("returns event date name from given event id", async () => {
-      const newEvent = await postEvent(validEvent);
-      const eventId = newEvent.body.event.id;
-      const EventByIdResponse = await request(app).get(
-        `/api/events/${eventId}`
-      );
-      expect(EventByIdResponse.body.eventDate).toEqual(
-        newEvent.body.event.eventDate
-      );
+      const { id, eventDate } = await getNewEvent();
+      const EventByIdResponse = await request(app).get(`/api/events/${id}`);
+      expect(EventByIdResponse.body.eventDate).toEqual(eventDate);
     });
   });
 
   describe("PUT /api/events/:id", () => {
+    const validEventUpdate: any = {
+      firstName: "Kazik",
+      lastName: "Kurczak",
+      email: "test@email.com",
+      eventDate: "2022-08-15",
+    };
+
+    const putEvent = async ({
+      id = "not-a-valid-id",
+      data = { validEventUpdate },
+      url = "/api/events",
+    } = {}) => {
+      return request(app).put(`${url}/${id}`).send(data.validEventUpdate);
+    };
+
     it("returns status code 404 when event with given id do not exist", async () => {
-      const eventById = await request(app).put(`/api/events/5353636`).send({
-        firstName: "Kazik",
-        lastName: "Kurczak",
-        email: "test@email.com",
-        eventDate: "2022-08-15",
-      });
+      const eventById = await putEvent();
       expect(eventById.statusCode).toBe(404);
     });
 
@@ -200,10 +200,9 @@ describe("Events integration tests", () => {
         statusCode,
         message,
       }) => {
-        const newEvent = await postEvent(validEvent);
-        const eventId = newEvent.body.event.id;
-        const EventByIdUpdateResponse = await request(app)
-          .put(`/api/events/${eventId}`)
+        const { id } = await getNewEvent();
+        const eventByIdUpdateResponse = await request(app)
+          .put(`/api/events/${id}`)
           .send({
             firstName: firstName,
             lastName: lastName,
@@ -211,60 +210,34 @@ describe("Events integration tests", () => {
             eventDate: eventDate,
           });
 
-        expect(EventByIdUpdateResponse.statusCode).toBe(statusCode);
-        expect(EventByIdUpdateResponse.body.message).toBe(message);
+        expect(eventByIdUpdateResponse.statusCode).toBe(statusCode);
+        expect(eventByIdUpdateResponse.body.message).toBe(message);
       }
     );
 
     it("returns updated event author first and last name from given event id", async () => {
-      const newEvent = await postEvent(validEvent);
-      const eventId = newEvent.body.event.id;
-      const EventByIdResponse = await request(app)
-        .put(`/api/events/${eventId}`)
-        .send({
-          firstName: "Kazik",
-          lastName: "Kurczak",
-          email: "Kazik@kurczak.com",
-          eventDate: "2022-08-15",
-        });
-      console.log("RES BODY", EventByIdResponse.body);
-      console.log("RES STATUS CODE", EventByIdResponse.statusCode);
-      expect(EventByIdResponse.body.event.dataValues.firstName).toEqual(
+      const { id } = await getNewEvent();
+      const eventByIdUpdateResponse = await putEvent({ id });
+      expect(eventByIdUpdateResponse.body.event.dataValues.firstName).toEqual(
         "Kazik"
       );
-      expect(EventByIdResponse.body.event.dataValues.lastName).toEqual(
+      expect(eventByIdUpdateResponse.body.event.dataValues.lastName).toEqual(
         "Kurczak"
       );
     });
 
     it("returns updated event author email from given event id", async () => {
-      const newEvent = await postEvent(validEvent);
-      const eventId = newEvent.body.event.id;
-      const EventByIdResponse = await request(app)
-        .put(`/api/events/${eventId}`)
-        .send({
-          firstName: "Kazik",
-          lastName: "Kurczak",
-          email: "test@email.com",
-          eventDate: "2022-08-15",
-        });
-      expect(EventByIdResponse.body.event.dataValues.email).toEqual(
+      const { id } = await getNewEvent();
+      const eventByIdUpdateResponse = await putEvent({ id });
+      expect(eventByIdUpdateResponse.body.event.dataValues.email).toEqual(
         "test@email.com"
       );
     });
 
     it("returns updated event date name from given event id", async () => {
-      const newEvent = await postEvent(validEvent);
-      const eventId = newEvent.body.event.id;
-      const EventByIdResponse = await request(app)
-        .put(`/api/events/${eventId}`)
-        .send({
-          firstName: "Kazik",
-          lastName: "Kurczak",
-          email: "Kazik@kurczak.com",
-          eventDate: "2022-08-15",
-        });
-      expect(EventByIdResponse.body.event.dataValues.eventDate).toEqual(
+      const { id } = await getNewEvent();
+      const eventByIdUpdateResponse = await putEvent({ id });
+      expect(eventByIdUpdateResponse.body.event.dataValues.eventDate).toEqual(
         "2022-08-15T00:00:00.000Z"
       );
     });
