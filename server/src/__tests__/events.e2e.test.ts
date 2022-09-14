@@ -95,10 +95,21 @@ describe("Events integration tests", () => {
   });
 
   describe("GET /api/events/all", () => {
-    it("should return 200 OK and all events", async () => {
+    it("returns status code 200 and empty array when no events in database", async () => {
       const response = await request(app).get("/api/events/all");
-      expect(response.status).toBe(200);
-      expect(response.body.length).toBeGreaterThan(0);
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+
+    it("returns array with one event", async () => {
+      await postEvent(validEvent);
+      const response = await request(app).get("/api/events/all");
+      expect(response.body.length).toBe(1);
     });
   });
+
+  // describe("GET ONE /api/events/:id", async () => {
+  //   const newEvent = await postEvent(validEvent);
+  //   // const eventById = await Event.findOne({ where: { id:newEvent.event.id  } });
+  // });
 });

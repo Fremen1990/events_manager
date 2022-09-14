@@ -7,7 +7,7 @@ async function welcomeHandler(req: Request, res: Response) {
   res.send(message);
 }
 
-export async function addEventHandler(req: Request, res: Response) {
+async function addEventHandler(req: Request, res: Response) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errors.array()[0];

@@ -8,25 +8,6 @@ async function welcome() {
   };
 }
 
-async function getAllEvents() {
-  const events = [
-    {
-      firstName: "Tomasz",
-      lastName: "Stanisz",
-      email: "tomasz@stanisz.com",
-      eventDate: "31-10-2022",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      email: "johnz@dooe.com",
-      eventDate: "31-06-2022",
-    },
-  ];
-
-  return events;
-}
-
 async function addEvent(event: EventTypes) {
   try {
     await Event.create(event);
@@ -34,6 +15,11 @@ async function addEvent(event: EventTypes) {
   } catch (error) {
     return error;
   }
+}
+
+async function getAllEvents(): Promise<EventTypes[]> {
+  const events = await Event.findAll();
+  return events;
 }
 
 export default { welcome, getAllEvents, addEvent };
