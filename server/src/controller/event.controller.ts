@@ -34,7 +34,7 @@ async function updateEventHandler(req: Request, res: Response) {
   try {
     const event = await EventService.updateEvent(id, req.body);
     if (event.message) {
-      return res.status(404).json(event.message);
+      return res.status(404).json({ message: event.message });
     }
     res.json({ message: "Event updated", event: { ...event } });
   } catch (error) {
@@ -47,9 +47,9 @@ async function deleteEventHandler(req: Request, res: Response) {
   try {
     const event = await EventService.deleteEvent(id);
     if (event.message.includes("not found")) {
-      return res.status(404).json(event.message);
+      return res.status(404).json({ message: event.message });
     }
-    res.json({ message: "Event deleted", event: { ...event } });
+    res.json({ message: "Event deleted" });
   } catch (error) {
     res.status(500).json(error);
   }

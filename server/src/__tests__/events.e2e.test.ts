@@ -218,18 +218,14 @@ describe("Events integration tests", () => {
     it("returns updated event author first and last name from given event id", async () => {
       const { id } = await getNewEvent();
       const eventByIdUpdateResponse = await putEvent({ id });
-      expect(eventByIdUpdateResponse.body.event.dataValues.firstName).toEqual(
-        "Kazik"
-      );
-      expect(eventByIdUpdateResponse.body.event.dataValues.lastName).toEqual(
-        "Kurczak"
-      );
+      expect(eventByIdUpdateResponse.body.event.firstName).toEqual("Kazik");
+      expect(eventByIdUpdateResponse.body.event.lastName).toEqual("Kurczak");
     });
 
     it("returns updated event author email from given event id", async () => {
       const { id } = await getNewEvent();
       const eventByIdUpdateResponse = await putEvent({ id });
-      expect(eventByIdUpdateResponse.body.event.dataValues.email).toEqual(
+      expect(eventByIdUpdateResponse.body.event.email).toEqual(
         "test@email.com"
       );
     });
@@ -237,7 +233,7 @@ describe("Events integration tests", () => {
     it("returns updated event date name from given event id", async () => {
       const { id } = await getNewEvent();
       const eventByIdUpdateResponse = await putEvent({ id });
-      expect(eventByIdUpdateResponse.body.event.dataValues.eventDate).toEqual(
+      expect(eventByIdUpdateResponse.body.event.eventDate).toEqual(
         "2022-08-15T00:00:00.000Z"
       );
     });

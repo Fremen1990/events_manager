@@ -37,7 +37,7 @@ async function updateEvent(id: string, event: EventTypes): Promise<any> {
   const eventToUpdate = await Event.findOne({ where: { id } });
   if (eventToUpdate) {
     const updatedEvent = await eventToUpdate.update(event);
-    return updatedEvent;
+    return updatedEvent.toJSON();
   } else {
     return { message: "Event not found" };
   }
