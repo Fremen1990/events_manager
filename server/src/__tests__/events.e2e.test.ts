@@ -40,27 +40,26 @@ describe("Events integration tests", () => {
 
   describe("POST /api/events", () => {
     it.each`
-      firstName         | lastName          | email               | eventDate       | statusCode | message
-      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${201}     | ${"Event added"}
-      ${""}             | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"First name is required"}
-      ${"a"}            | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
-      ${"a".repeat(33)} | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
-      ${"John"}         | ${""}             | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Last name is required"}
-      ${"John"}         | ${"a"}            | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
-      ${"John"}         | ${"a".repeat(33)} | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
-      ${"John"}         | ${"Doe"}          | ${""}               | ${"2022-08-15"} | ${400}     | ${"Email is required"}
-      ${"John"}         | ${"Doe"}          | ${"abc.com"}        | ${"2022-08-15"} | ${400}     | ${"Must be a valid email address"}
-      ${"John"}         | ${"Doe"}          | ${"abc@com"}        | ${"2022-08-15"} | ${400}     | ${"Must be a valid email address"}
-      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${""}           | ${400}     | ${"Date is required"}
-      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${"not-a-date"} | ${400}     | ${"Must be a valid date"}
+      firstName         | lastName          | email               | eventDate       | statusCode | label          | message
+      ${""}             | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"firstName"} | ${"First name is required"}
+      ${"a"}            | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"firstName"} | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"a".repeat(33)} | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"firstName"} | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"John"}         | ${""}             | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"lastName"}  | ${"Last name is required"}
+      ${"John"}         | ${"a"}            | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"lastName"}  | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"John"}         | ${"a".repeat(33)} | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"lastName"}  | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"John"}         | ${"Doe"}          | ${""}               | ${"2022-08-15"} | ${400}     | ${"email"}     | ${"Email is required"}
+      ${"John"}         | ${"Doe"}          | ${"abc.com"}        | ${"2022-08-15"} | ${400}     | ${"email"}     | ${"Must be a valid email address"}
+      ${"John"}         | ${"Doe"}          | ${"abc@com"}        | ${"2022-08-15"} | ${400}     | ${"email"}     | ${"Must be a valid email address"}
+      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${""}           | ${400}     | ${"eventDate"} | ${"Date is required"}
     `(
-      "(VALIDATION) returns status code: $statusCode and message: $message when given $firstName, $lastName, $email, $eventDate",
+      "(VALIDATION) returns status code: $statusCode and message: $message when given $firstName, $lastName, $email, $eventDate to $label input",
       async ({
         firstName,
         lastName,
         email,
         eventDate,
         statusCode,
+        label,
         message,
       }) => {
         const response = await postEvent({
@@ -70,7 +69,7 @@ describe("Events integration tests", () => {
           eventDate: eventDate,
         });
         expect(response.statusCode).toBe(statusCode);
-        expect(response.body.message).toBe(message);
+        expect(response.body.validationErrors[label]).toBe(message);
       }
     );
 
@@ -177,27 +176,26 @@ describe("Events integration tests", () => {
     });
 
     it.each`
-      firstName         | lastName          | email               | eventDate       | statusCode | message
-      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${200}     | ${"Event updated"}
-      ${""}             | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"First name is required"}
-      ${"a"}            | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
-      ${"a".repeat(33)} | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
-      ${"John"}         | ${""}             | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Last name is required"}
-      ${"John"}         | ${"a"}            | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
-      ${"John"}         | ${"a".repeat(33)} | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"Must be at least 2 and maximum 32 chars long"}
-      ${"John"}         | ${"Doe"}          | ${""}               | ${"2022-08-15"} | ${400}     | ${"Email is required"}
-      ${"John"}         | ${"Doe"}          | ${"abc.com"}        | ${"2022-08-15"} | ${400}     | ${"Must be a valid email address"}
-      ${"John"}         | ${"Doe"}          | ${"abc@com"}        | ${"2022-08-15"} | ${400}     | ${"Must be a valid email address"}
-      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${""}           | ${400}     | ${"Date is required"}
-      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${"not-a-date"} | ${400}     | ${"Must be a valid date"}
+      firstName         | lastName          | email               | eventDate       | statusCode | label          | message
+      ${""}             | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"firstName"} | ${"First name is required"}
+      ${"a"}            | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"firstName"} | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"a".repeat(33)} | ${"Doe"}          | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"firstName"} | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"John"}         | ${""}             | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"lastName"}  | ${"Last name is required"}
+      ${"John"}         | ${"a"}            | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"lastName"}  | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"John"}         | ${"a".repeat(33)} | ${"john@gmail.com"} | ${"2022-08-15"} | ${400}     | ${"lastName"}  | ${"Must be at least 2 and maximum 32 chars long"}
+      ${"John"}         | ${"Doe"}          | ${""}               | ${"2022-08-15"} | ${400}     | ${"email"}     | ${"Email is required"}
+      ${"John"}         | ${"Doe"}          | ${"abc.com"}        | ${"2022-08-15"} | ${400}     | ${"email"}     | ${"Must be a valid email address"}
+      ${"John"}         | ${"Doe"}          | ${"abc@com"}        | ${"2022-08-15"} | ${400}     | ${"email"}     | ${"Must be a valid email address"}
+      ${"John"}         | ${"Doe"}          | ${"john@gmail.com"} | ${""}           | ${400}     | ${"eventDate"} | ${"Date is required"}
     `(
-      "(VALIDATION) returns status code: $statusCode and message: $message when given $firstName, $lastName, $email, $eventDate",
+      "(VALIDATION) returns status code: $statusCode and message: $message when given $firstName, $lastName, $email, $eventDate to $label input",
       async ({
         firstName,
         lastName,
         email,
         eventDate,
         statusCode,
+        label,
         message,
       }) => {
         const { id } = await getNewEvent();
@@ -211,7 +209,9 @@ describe("Events integration tests", () => {
           });
 
         expect(eventByIdUpdateResponse.statusCode).toBe(statusCode);
-        expect(eventByIdUpdateResponse.body.message).toBe(message);
+        expect(eventByIdUpdateResponse.body.validationErrors[label]).toBe(
+          message
+        );
       }
     );
 

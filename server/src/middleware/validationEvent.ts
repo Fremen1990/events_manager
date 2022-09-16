@@ -1,5 +1,6 @@
 import { check, validationResult } from "express-validator";
 import { NextFunction, Request, Response } from "express";
+import ValidationError from "../error/ValidationError";
 
 const validationEvent = [
   check("firstName")
@@ -20,19 +21,11 @@ const validationEvent = [
     .bail()
     .isEmail()
     .withMessage("Must be a valid email address"),
-  check("eventDate")
-    .notEmpty()
-    .withMessage("Date is required")
-    .isISO8601()
-    .withMessage("Must be a valid date"),
+  check("eventDate").notEmpty().withMessage("Date is required"),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      // return res.status(400).json({ errors: errors.array() });
-      const error = errors.array()[0];
-      return res
-        .status(400)
-        .json({ error: { value: error.value }, message: error.msg });
+      next(ValidationError(errors.array()));
     }
     next();
   },
