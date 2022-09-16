@@ -19,25 +19,26 @@ describe("<EventForm/>", () => {
       ${"First name"}
       ${"Last name"}
       ${"Email"}
-      ${"Event Date"}
-    `("has input field for $label", ({ label }) => {
-      const input = screen.getByLabelText(label);
+      ${"Event date"}
+    `("has input field: '$label'", ({ label }) => {
+      const RegLabel = new RegExp(label, "i");
+      const input = screen.getByLabelText(RegLabel);
       expect(input).toBeInTheDocument();
     });
 
     it.each`
-      label           | type       | id
-      ${"First name"} | ${"text"}  | ${"firstName"}
-      ${"Last name"}  | ${"text"}  | ${"lastName"}
-      ${"Email"}      | ${"email"} | ${"email"}
-      ${"Event Date"} | ${"date"}  | ${"eventDate"}
-    `("has input field for '$label' with type '$type'", ({ label, type }) => {
-      const input = screen.getByLabelText(label);
-      expect(input).toBeInTheDocument();
-      expect(input).toHaveAttribute("type", type);
+      label           | type
+      ${"First name"} | ${"text"}
+      ${"Last name"}  | ${"text"}
+      ${"Email"}      | ${"email"}
+      ${"Event date"} | ${"date"}
+    `("has input '$label' with property type='$type': ", ({ label, type }) => {
+      const RegLabel = new RegExp(label, "i");
+      const input = screen.getByLabelText(RegLabel);
+      expect(input).toHaveProperty("type", type);
     });
 
-    it("has Add Event button", () => {
+    it("has 'Add Event' button", () => {
       const button = screen.getByRole("button", { name: "Add Event" });
       expect(button).toBeInTheDocument();
     });
@@ -50,7 +51,7 @@ describe("<EventForm/>", () => {
   describe("Interactions - when the user is filling the form", () => {
     it("enables button when first field is filled", () => {
       render(<EventForm />);
-      const firstNameInput = screen.getByLabelText("First name");
+      const firstNameInput = screen.getByLabelText(/First name/i);
       userEvent.type(firstNameInput, "Testing Joe");
       const button = screen.getByRole("button", { name: "Add Event" });
       expect(button).toBeEnabled();
