@@ -4,7 +4,7 @@
     "username": "admin",
     "password": "secret",
     "dialect": "sqlite",
-    "storage": "./database.sqlite",
+    "storage": "./src/db/development.database.sqlite",
     "logging": false
   }
 }
