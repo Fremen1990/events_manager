@@ -6,8 +6,6 @@ import {
 } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import { createGlobalStyle } from "styled-components";
-
 const darkTheme = createTheme({
   palette: {
     mode: "light",
