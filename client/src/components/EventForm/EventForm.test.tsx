@@ -1,9 +1,10 @@
 import React from "react";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import EventForm from "./EventForm";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
+import "@testing-library/jest-dom";
 
 describe("<EventForm/>", () => {
   describe("Layout - when the form is rendered", () => {
