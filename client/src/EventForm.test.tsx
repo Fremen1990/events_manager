@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import EventForm from "./EventForm";
+import userEvent from "@testing-library/user-event";
 
 describe("<EventForm/>", () => {
   describe("Layout - when the form is rendered", () => {
@@ -43,6 +44,16 @@ describe("<EventForm/>", () => {
     it("disables button initially", () => {
       const button = screen.getByRole("button", { name: "Add Event" });
       expect(button).toBeDisabled();
+    });
+  });
+
+  describe("Interactions - when the user is filling the form", () => {
+    it("enables button when first field is filled", () => {
+      render(<EventForm />);
+      const firstNameInput = screen.getByLabelText("First name");
+      userEvent.type(firstNameInput, "Testing Joe");
+      const button = screen.getByRole("button", { name: "Add Event" });
+      expect(button).toBeEnabled();
     });
   });
 });
