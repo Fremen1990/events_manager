@@ -1,10 +1,11 @@
+import Header from "../common/Header";
+import Container from "../Layout/Container";
+import EventsListsStyle from "./EventsListStyle";
+
 const EventsList = () => {
   return (
-    <div>
-      <h1>Events List</h1>;
-      <ul>
-        <li></li>
-      </ul>
+    <EventsListsStyle>
+      <Header style={{ fontSize: 48 }}>Events List</Header>
       <table>
         <thead>
           <tr>
@@ -124,7 +125,7 @@ const EventsList = () => {
           </tr>
         </tbody>
       </table>
-    </div>
+    </EventsListsStyle>
   );
 };
 export default EventsList;

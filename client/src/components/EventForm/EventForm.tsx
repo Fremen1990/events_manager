@@ -6,6 +6,7 @@ import LoadingButton from "../LoadingButton/LoadingButton";
 import { EventFormBody, ValidationErrors } from "../../types/EventFormTypes";
 import EventFormStyles from "./EventFormStyle";
 import Header from "../common/Header";
+import Container from "../Layout/Container";
 
 const EventForm = () => {
   const [disabled, setDisabled] = useState<boolean>(false);
@@ -55,7 +56,6 @@ const EventForm = () => {
       <Header>Create Event</Header>
       <InputField
         onChange={onInputChange}
-        // color="success"
         error={!!errors.firstName}
         helperText={errors.firstName}
         type="text"
@@ -68,7 +68,6 @@ const EventForm = () => {
 
       <InputField
         onChange={onInputChange}
-        // color="success"
         error={!!errors.lastName}
         helperText={errors.lastName}
         type="text"
@@ -81,7 +80,6 @@ const EventForm = () => {
 
       <InputField
         onChange={onInputChange}
-        // color="success"
         error={!!errors.email}
         helperText={errors.email}
         type="email"
@@ -94,7 +92,6 @@ const EventForm = () => {
 
       <InputField
         onChange={onInputChange}
-        // color="success"
         error={!!errors.eventDate}
         helperText={errors.eventDate}
         type="date"
@@ -108,7 +105,7 @@ const EventForm = () => {
         data-testid="event-date"
       />
 
-      <div>
+      <Container>
         {success ? (
           <Alert
             severity="success"
@@ -126,7 +123,7 @@ const EventForm = () => {
             data-testid="add-event-button"
           />
         )}
-      </div>
+      </Container>
     </EventFormStyles>
   );
 };
