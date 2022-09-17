@@ -1,67 +1,11 @@
-import React, { MouseEventHandler, useState } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import styled from "styled-components";
+import React, { useState } from "react";
 import axios from "axios";
-import { CircularProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
-
-const EventFormStyles = styled.form`
-  min-width: 350px;
-  border: 1px solid #ccc;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const InputField = styled(TextField)`
-  margin: 1rem 0;
-  font-family: "Permanent Marker", cursive;
-`;
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const LoadingButton = ({ loading, handleSubmitForm, disabled }: any) => {
-  return (
-    <Container>
-      {loading ? (
-        <CircularProgress data-testid="loading-button" />
-      ) : (
-        <Button
-          onClick={handleSubmitForm}
-          variant="contained"
-          disabled={disabled}
-          size="large"
-        >
-          Add Event
-        </Button>
-      )}
-    </Container>
-  );
-};
-
-const Header = styled.h1`
-  font-family: "Permanent Marker", cursive;
-  text-align: center;
-`;
-
-interface EventFormBody {
-  firstName: string;
-  lastName: string;
-  email: string;
-  eventDate: string;
-}
-
-interface ValidationErrors {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  eventDate?: string;
-}
+import InputField from "../common/InputField";
+import LoadingButton from "../LoadingButton/LoadingButton";
+import { EventFormBody, ValidationErrors } from "../../types/EventFormTypes";
+import EventFormStyles from "./EventFormStyle";
+import Header from "../common/Header";
 
 const EventForm = () => {
   const [disabled, setDisabled] = useState<boolean>(false);
