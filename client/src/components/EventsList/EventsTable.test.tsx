@@ -27,6 +27,7 @@ describe("<EventsTable/>", () => {
       const table = screen.getByRole("table");
       expect(table).toBeInTheDocument();
     });
+
     it.each`
       headerName
       ${"No"}

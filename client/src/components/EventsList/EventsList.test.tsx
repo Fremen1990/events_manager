@@ -1,9 +1,10 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import EventsList from "./EventsList";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
+import userEvent from "@testing-library/user-event";
 
 describe("<EventsList/>", () => {
   it("has header with name: 'Events List'", () => {
@@ -45,6 +46,12 @@ describe("<EventsList/>", () => {
 
     afterAll(() => server.close());
 
+    it("has table rendered", async () => {
+      render(<EventsList />);
+      const table = await screen.findByRole("table");
+      expect(table).toBeInTheDocument();
+    });
+
     it('has a button with name "Edit" in the table', async () => {
       render(<EventsList />);
       const buttons = await screen.findAllByRole("button", { name: "Edit" });
@@ -72,6 +79,15 @@ describe("<EventsList/>", () => {
       render(<EventsList />);
       const spinner = await screen.getByTestId("loading-spinner");
       expect(spinner).toBeInTheDocument();
+    });
+
+    it("deletes the event", async () => {
+      render(<EventsList />);
+      const John = await screen.findAllByText("John");
+      expect(John[0]).toBeInTheDocument();
+      const buttons = await screen.findAllByRole("button", { name: "Delete" });
+      userEvent.click(buttons[0]);
+      expect(John[0]).not.toBeInTheDocument();
     });
   });
 });

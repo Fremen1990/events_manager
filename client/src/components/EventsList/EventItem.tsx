@@ -1,10 +1,15 @@
 import React from "react";
 
-const EventItem = ({ event, index, handleEditForm, handleDelete }: any) => {
-  const { firstName, lastName, email, eventDate } = event;
+const EventItem = ({ event, index, handleEditForm, deleteEvent }: any) => {
+  const { id, firstName, lastName, email, eventDate } = event;
+
+  const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    deleteEvent(id, index);
+  };
 
   return (
-    <tr>
+    <>
       <td>{index + 1}</td>
       <td>{firstName}</td>
       <td>{lastName}</td>
@@ -16,7 +21,7 @@ const EventItem = ({ event, index, handleEditForm, handleDelete }: any) => {
       <td>
         <button onClick={handleDelete}>Delete</button>
       </td>
-    </tr>
+    </>
   );
 };
 
