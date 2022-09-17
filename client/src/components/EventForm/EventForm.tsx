@@ -90,15 +90,11 @@ const EventForm = () => {
           if (response.status === 201) {
             setSuccess(true);
           }
-          console.log("STATUS", response.status);
 
           setDisabled(false);
           setLoading(false);
         } catch (error: any) {
-          // if (error.response.status === 400) {
-          console.log(error.response.data.validationErrors);
           setErrors(error.response.data.validationErrors);
-          // }
           setLoading(false);
           setDisabled(false);
         }
@@ -122,8 +118,8 @@ const EventForm = () => {
       <InputField
         onChange={onInputChange}
         // color="success"
-        // error
-        // helperText="First Name is required"
+        error={!!errors.lastName}
+        helperText={errors.lastName}
         type="text"
         required
         id="lastName"
@@ -134,8 +130,8 @@ const EventForm = () => {
       <InputField
         onChange={onInputChange}
         // color="success"
-        // error
-        // helperText="First Name is required"
+        error={!!errors.email}
+        helperText={errors.email}
         type="email"
         required
         id="email"
@@ -146,8 +142,8 @@ const EventForm = () => {
       <InputField
         onChange={onInputChange}
         // color="success"
-        // error
-        // helperText="First Name is required"
+        error={!!errors.eventDate}
+        helperText={errors.eventDate}
         type="date"
         required
         id="eventDate"

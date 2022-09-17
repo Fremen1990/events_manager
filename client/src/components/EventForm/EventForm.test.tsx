@@ -145,5 +145,33 @@ describe("<EventForm/>", () => {
       await waitFor(() => userEvent.click(button));
       expect(validationError).toBeInTheDocument();
     });
+
+    const generateValidationErrors = (field: string, message: string) => {
+      return rest.post("/api/events", async (req, res, ctx) => {
+        return res(
+          ctx.status(400),
+          ctx.json({
+            validationErrors: { [field]: message },
+          })
+        );
+      });
+    };
+
+    it.each`
+      field          | message
+      ${"firstName"} | ${"First name is required"}
+      ${"lastName"}  | ${"Last name is required"}
+      ${"email"}     | ${"Email is required"}
+      ${"eventDate"} | ${"Date is required"}
+    `(
+      "displays validation error for $field when the input is empty",
+      async ({ field, message }) => {
+        server.use(generateValidationErrors(field, message));
+        setup();
+        userEvent.click(button);
+        const validationError = await screen.findByText(message);
+        expect(validationError).toBeInTheDocument();
+      }
+    );
   });
 });
