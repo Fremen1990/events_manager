@@ -15,8 +15,7 @@ const EventsTable = ({ events, deleteEvent }: any) => {
           <th>Last name</th>
           <th>Email</th>
           <th>Event date</th>
-          <th>Edit</th>
-          <th>Delete</th>
+          <th>From now</th>
         </tr>
       </thead>
       <tbody>

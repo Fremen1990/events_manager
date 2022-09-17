@@ -30,8 +30,6 @@ const EventsList = () => {
       // getEvents(); // Slower, with querying the server
       setEvents(newEvents);
       setIsLoading(false);
-
-      console.log("CALLLLSED FROM TEST MOCK!!!!!!!!!!!!");
     } catch (error: any) {
       setError(error);
       console.log(error);

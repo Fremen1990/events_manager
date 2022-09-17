@@ -35,8 +35,7 @@ describe("<EventsTable/>", () => {
       ${"Last name"}
       ${"Email"}
       ${"Event date"}
-      ${"Edit"}
-      ${"Delete"}
+      ${"From now"}
     `("has '$headerName' column in the table", ({ headerName }) => {
       render(<EventsTable events={eventsMock} />);
       const header = screen.getByRole("columnheader", { name: headerName });

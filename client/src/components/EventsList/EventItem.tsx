@@ -1,11 +1,12 @@
 import React from "react";
+import moment from "moment";
 
 const EventItem = ({ event, index, handleEditForm, deleteEvent }: any) => {
   const { id, firstName, lastName, email, eventDate } = event;
 
   const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    deleteEvent(id, index);
+    deleteEvent(id);
   };
 
   return (
@@ -14,7 +15,8 @@ const EventItem = ({ event, index, handleEditForm, deleteEvent }: any) => {
       <td>{firstName}</td>
       <td>{lastName}</td>
       <td>{email}</td>
-      <td>{eventDate}</td>
+      <td>{moment(eventDate).format("Do MM YYYY")}</td>
+      <td>{moment(eventDate).fromNow()}</td>
       <td>
         <button onClick={handleEditForm}>Edit</button>
       </td>

@@ -39,7 +39,7 @@ describe("Interactions - when the list is rendered", () => {
   it('calls "onDelete" callback when the "Delete" button is clicked', () => {
     const handleDeleteMock = jest.fn();
     render(
-      <EventItem event={eventMock} index={1} handleDelete={handleDeleteMock} />
+      <EventItem event={eventMock} index={1} deleteEvent={handleDeleteMock} />
     );
     const button = screen.getByRole("button", { name: "Delete" });
     button.click();
