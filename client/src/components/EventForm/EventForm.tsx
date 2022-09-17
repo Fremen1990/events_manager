@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEventHandler, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
@@ -7,6 +7,7 @@ import { CircularProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
 
 const EventFormStyles = styled.form`
+  min-width: 350px;
   border: 1px solid #ccc;
   padding: 30px;
   display: flex;
@@ -43,6 +44,11 @@ const LoadingButton = ({ loading, handleSubmitForm, disabled }: any) => {
   );
 };
 
+const Header = styled.h1`
+  font-family: "Permanent Marker", cursive;
+  text-align: center;
+`;
+
 interface EventFormBody {
   firstName: string;
   lastName: string;
@@ -50,89 +56,103 @@ interface EventFormBody {
   eventDate: string;
 }
 
+interface ValidationErrors {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  eventDate?: string;
+}
+
 const EventForm = () => {
-  const [disabled, setDisabled] = React.useState(true);
-  const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
-  const [formData, setFormData] = React.useState({
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [formData, setFormData] = useState<EventFormBody>({
     firstName: "",
     lastName: "",
     email: "",
     eventDate: "",
   });
 
-  const onInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = target;
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { id, value } = event.target;
     setFormData({ ...formData, [id]: value });
-    setDisabled(false);
+    setErrors({ ...errors, [id]: "" });
   };
 
-  const handleSubmitForm =
-    async (): // event: MouseEventHandler<HTMLButtonElement>,
+  const handleSubmitForm = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): // formData: EventFormBody
+  Promise<void> =>
     // formData: EventFormBody
-    Promise<void> =>
-      // formData: EventFormBody
-      {
-        // event.preventDefault();
-        try {
-          setDisabled(true);
-          setLoading(true);
-          const response = await axios.post("/api/events", formData);
-          setDisabled(false);
-          setLoading(false);
+    {
+      event.preventDefault();
+      try {
+        setDisabled(true);
+        setLoading(true);
+        const response = await axios.post("/api/events", formData);
+        if (response.status === 201) {
           setSuccess(true);
-        } catch (error) {
-          console.log(error);
-          setLoading(false);
-
-          setDisabled(false);
         }
-      };
+
+        setDisabled(false);
+        setLoading(false);
+      } catch (error: any) {
+        setErrors(error.response.data.validationErrors);
+        setLoading(false);
+        setDisabled(false);
+      }
+    };
 
   return (
-    <EventFormStyles>
-      <h1 style={{ fontFamily: "Permanent Marker" }}>Create Event</h1>
+    <EventFormStyles onSubmit={handleSubmitForm}>
+      <Header>Create Event</Header>
       <InputField
         onChange={onInputChange}
         // color="success"
-        // error
-        // helperText="First Name is required"
+        error={!!errors.firstName}
+        helperText={errors.firstName}
         type="text"
         required
         id="firstName"
         label="First name"
         variant="outlined"
+        data-testid="first-name"
       />
 
       <InputField
         onChange={onInputChange}
         // color="success"
-        // error
-        // helperText="First Name is required"
+        error={!!errors.lastName}
+        helperText={errors.lastName}
         type="text"
         required
         id="lastName"
         label="Last name"
         variant="outlined"
+        data-testid="last-name"
       />
 
       <InputField
         onChange={onInputChange}
         // color="success"
-        // error
-        // helperText="First Name is required"
+        error={!!errors.email}
+        helperText={errors.email}
         type="email"
         required
         id="email"
         label="Email"
         variant="outlined"
+        data-testid="email"
       />
 
       <InputField
         onChange={onInputChange}
         // color="success"
-        // error
-        // helperText="First Name is required"
+        error={!!errors.eventDate}
+        helperText={errors.eventDate}
         type="date"
         required
         id="eventDate"
@@ -141,6 +161,7 @@ const EventForm = () => {
         InputLabelProps={{
           shrink: true,
         }}
+        data-testid="event-date"
       />
 
       <div>

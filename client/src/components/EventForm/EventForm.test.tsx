@@ -1,9 +1,10 @@
 import React from "react";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import EventForm from "./EventForm";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
+import "@testing-library/jest-dom";
 
 describe("<EventForm/>", () => {
   describe("Layout - when the form is rendered", () => {
@@ -44,10 +45,6 @@ describe("<EventForm/>", () => {
       const button = screen.getByRole("button", { name: "Add Event" });
       expect(button).toBeInTheDocument();
     });
-    it("disables button initially", () => {
-      const button = screen.getByRole("button", { name: "Add Event" });
-      expect(button).toBeDisabled();
-    });
   });
 
   describe("Interactions - when the user is filling the form", () => {
@@ -62,14 +59,18 @@ describe("<EventForm/>", () => {
     );
 
     beforeEach(() => {
-      server.resetHandlers();
       counter = 0;
+      server.resetHandlers();
     });
     beforeAll(() => server.listen());
 
     afterAll(() => server.close());
 
-    let firstNameInput, lastNameInput, emailInput, eventDateInput, button: any;
+    let firstNameInput: HTMLElement,
+      lastNameInput: HTMLElement,
+      emailInput: HTMLElement,
+      eventDateInput: HTMLElement,
+      button: HTMLElement;
 
     const setup = () => {
       render(<EventForm />);
@@ -84,10 +85,19 @@ describe("<EventForm/>", () => {
       button = screen.getByRole("button", { name: "Add Event" });
     };
 
-    it("enables button when first field is filled", () => {
-      setup();
-      expect(button).toBeEnabled();
-    });
+    const generateValidationErrors = (
+      field: string | any,
+      message: string | any
+    ) => {
+      return rest.post("/api/events", async (req, res, ctx) => {
+        return res(
+          ctx.status(400),
+          ctx.json({
+            validationErrors: { [field]: message },
+          })
+        );
+      });
+    };
 
     it("sends First name, Last name, Email, Event date to the server when clicking button", async () => {
       setup();
@@ -104,6 +114,7 @@ describe("<EventForm/>", () => {
 
     it("disables button when there is an ongoing api call", async () => {
       setup();
+      // Preventing from double request
       await waitFor(() => userEvent.click(button));
       await waitFor(() => userEvent.click(button));
       await screen.findByText(/Event added/i);
@@ -114,6 +125,18 @@ describe("<EventForm/>", () => {
       setup();
       await waitFor(() => userEvent.click(button));
       expect(screen.getByTestId("loading-button")).toBeInTheDocument();
+    });
+
+    it("hides spinner and enables button after api call is finished", async () => {
+      server.use(
+        generateValidationErrors("firstName", "First name is required")
+      );
+      setup();
+      await waitFor(() => userEvent.click(button));
+      expect(screen.queryByTestId("loading-button")).toBeInTheDocument();
+      await screen.findByText(/First name is required/i);
+      expect(screen.queryByTestId("loading-button")).not.toBeInTheDocument();
+      expect(button).toBeEnabled();
     });
 
     it("displays success message after successful api call", async () => {
@@ -134,5 +157,69 @@ describe("<EventForm/>", () => {
       userEvent.click(closeButton);
       expect(screen.queryByText(successMessage)).not.toBeInTheDocument();
     });
+
+    it("displays validation error for First Name when the input is empty", async () => {
+      server.use(
+        rest.post("/api/events", async (req, res, ctx) => {
+          return res(
+            ctx.status(400),
+            ctx.json({
+              validationErrors: { firstName: "First name is required" },
+            })
+          );
+        })
+      );
+      setup();
+      userEvent.click(button);
+      const validationError = await screen.findByText("First name is required");
+      await waitFor(() => userEvent.click(button));
+      expect(validationError).toBeInTheDocument();
+    });
+
+    it.each`
+      field          | message
+      ${"firstName"} | ${"First name is required"}
+      ${"lastName"}  | ${"Last name is required"}
+      ${"email"}     | ${"Email is required"}
+      ${"eventDate"} | ${"Date is required"}
+    `(
+      "displays validation error for $field when the input is empty",
+      async ({ field, message }) => {
+        server.use(generateValidationErrors(field, message));
+        setup();
+        userEvent.click(button);
+        const validationError = await screen.findByText(message);
+        expect(validationError).toBeInTheDocument();
+      }
+    );
+
+    it("clears validation errors after user starts typing", async () => {
+      server.use(
+        generateValidationErrors("firstName", "First name is required")
+      );
+      setup();
+      userEvent.click(button);
+      const validationError = await screen.findByText("First name is required");
+      userEvent.type(firstNameInput, "updatedInput");
+      expect(validationError).not.toBeInTheDocument();
+    });
+
+    it.each`
+      field          | message                     | label           | updatedValue
+      ${"firstName"} | ${"First name is required"} | ${"First name"} | ${"updatedInput"}
+      ${"lastName"}  | ${"Last name is required"}  | ${"Last name"}  | ${"updatedInput"}
+      ${"email"}     | ${"Email is required"}      | ${"Email"}      | ${"updatedInput"}
+    `(
+      "clears validation error for $field after user starts typing",
+      async ({ field, message, label, updatedValue }) => {
+        server.use(generateValidationErrors(field, message));
+        setup();
+        userEvent.click(button);
+        const validationError = await screen.findByText(message);
+        const input = screen.getByLabelText(new RegExp(label, "i"));
+        userEvent.type(input, updatedValue);
+        expect(validationError).not.toBeInTheDocument();
+      }
+    );
   });
 });
