@@ -73,7 +73,7 @@ const EventForm = () => {
   const onInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = target;
     setFormData({ ...formData, [id]: value });
-    setDisabled(false);
+    setErrors({ ...errors, [id]: "" });
   };
 
   const handleSubmitForm =

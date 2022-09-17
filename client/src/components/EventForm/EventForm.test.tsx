@@ -66,7 +66,11 @@ describe("<EventForm/>", () => {
 
     afterAll(() => server.close());
 
-    let firstNameInput, lastNameInput, emailInput, eventDateInput, button: any;
+    let firstNameInput: HTMLElement,
+      lastNameInput: HTMLElement,
+      emailInput: HTMLElement,
+      eventDateInput: HTMLElement,
+      button: HTMLElement;
 
     const setup = () => {
       render(<EventForm />);
@@ -185,5 +189,16 @@ describe("<EventForm/>", () => {
         expect(validationError).toBeInTheDocument();
       }
     );
+
+    it("clears validation errors after user starts typing", async () => {
+      server.use(
+        generateValidationErrors("firstName", "First name is required")
+      );
+      setup();
+      userEvent.click(button);
+      const validationError = await screen.findByText("First name is required");
+      userEvent.type(firstNameInput, "updatedInput");
+      expect(validationError).not.toBeInTheDocument();
+    });
   });
 });
