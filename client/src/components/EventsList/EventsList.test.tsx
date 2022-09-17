@@ -2,51 +2,76 @@ import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import EventsList from "./EventsList";
+import { rest } from "msw";
+import { setupServer } from "msw/node";
 
 describe("<EventsList/>", () => {
-  describe("Layout - when the list is rendered", () => {
-    it("has header with name: 'Events List'", () => {
-      render(<EventsList />);
-      const header = screen.getByRole("heading", { name: "Events List" });
-      expect(header).toBeInTheDocument();
+  it("has header with name: 'Events List'", () => {
+    render(<EventsList />);
+    const header = screen.getByRole("heading", { name: "Events List" });
+    expect(header).toBeInTheDocument();
+  });
+
+  describe("Interactions - when the list is rendered", () => {
+    const responseMock = [
+      {
+        id: 1,
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@doe.com",
+        eventDate: "2021-01-01",
+      },
+      {
+        id: 2,
+        firstName: "Jane",
+        lastName: "Doe",
+        email: "jane@doe.com",
+        eventDate: "2021-01-01",
+      },
+    ];
+
+    let requestBody: any;
+    const server = setupServer(
+      rest.get("api/events/all", async (req, res, ctx) => {
+        return res(ctx.status(200), ctx.json(responseMock));
+      })
+    );
+
+    beforeEach(() => {
+      server.resetHandlers();
     });
 
-    it("has table rendered", () => {
+    beforeAll(() => server.listen());
+
+    afterAll(() => server.close());
+
+    it('has a button with name "Edit" in the table', async () => {
       render(<EventsList />);
-      const table = screen.getByRole("table");
-      expect(table).toBeInTheDocument();
-    });
-    it.each`
-      headerName
-      ${"No"}
-      ${"First name"}
-      ${"Last name"}
-      ${"Email"}
-      ${"Event date"}
-      ${"Edit"}
-      ${"Delete"}
-    `("has '$headerName' column in the table", ({ headerName }) => {
-      render(<EventsList />);
-      const header = screen.getByRole("columnheader", { name: headerName });
-      expect(header).toBeInTheDocument();
+      const buttons = await screen.findAllByRole("button", { name: "Edit" });
+      expect(buttons.length).toBeGreaterThan(0);
     });
 
-    it("has body in the table", () => {
+    it('has a button with name "Delete" in the table', async () => {
       render(<EventsList />);
-      const body = screen.getAllByRole("rowgroup");
-      expect(body).toBeDefined();
+      const buttons = await screen.findAllByRole("button", { name: "Delete" });
+      expect(buttons.length).toBeGreaterThan(0);
     });
 
-    it("has a row in the table", () => {
+    it("has a cell in the table", async () => {
       render(<EventsList />);
-      const row = screen.getAllByRole("row");
-      expect(row).toBeDefined();
+      const cells = await screen.findAllByRole("cell");
+      expect(cells.length).toBeGreaterThan(0);
     });
 
-    it("has a cell in the table", () => {
+    it("gets the data from the server", async () => {
       render(<EventsList />);
-      const cell = screen.getAllByRole("cell");
-      expect(cell).toBeDefined();
+      expect((await screen.findAllByText("John")).length).toBeGreaterThan(0);
+    });
+
+    it("displays spinner when the data is loading", async () => {
+      render(<EventsList />);
+      const spinner = await screen.getByTestId("loading-spinner");
+      expect(spinner).toBeInTheDocument();
     });
   });
 });
