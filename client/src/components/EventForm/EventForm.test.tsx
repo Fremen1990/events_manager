@@ -45,10 +45,6 @@ describe("<EventForm/>", () => {
       const button = screen.getByRole("button", { name: "Add Event" });
       expect(button).toBeInTheDocument();
     });
-    it("disables button initially", () => {
-      const button = screen.getByRole("button", { name: "Add Event" });
-      expect(button).toBeDisabled();
-    });
   });
 
   describe("Interactions - when the user is filling the form", () => {
@@ -85,11 +81,6 @@ describe("<EventForm/>", () => {
       button = screen.getByRole("button", { name: "Add Event" });
     };
 
-    it("enables button when first field is filled", () => {
-      setup();
-      expect(button).toBeEnabled();
-    });
-
     it("sends First name, Last name, Email, Event date to the server when clicking button", async () => {
       setup();
       userEvent.click(button);
@@ -105,6 +96,7 @@ describe("<EventForm/>", () => {
 
     it("disables button when there is an ongoing api call", async () => {
       setup();
+      // Preventing from double request
       await waitFor(() => userEvent.click(button));
       await waitFor(() => userEvent.click(button));
       await screen.findByText(/Event added/i);
@@ -134,6 +126,24 @@ describe("<EventForm/>", () => {
       const closeButton = screen.getByRole("button", { name: "Close" });
       userEvent.click(closeButton);
       expect(screen.queryByText(successMessage)).not.toBeInTheDocument();
+    });
+
+    it("displays validation error for First Name when the input is empty", async () => {
+      server.use(
+        rest.post("/api/events", async (req, res, ctx) => {
+          return res(
+            ctx.status(400),
+            ctx.json({
+              validationErrors: { firstName: "First name is required" },
+            })
+          );
+        })
+      );
+      setup();
+      userEvent.click(button);
+      const validationError = await screen.findByText("First name is required");
+      await waitFor(() => userEvent.click(button));
+      expect(validationError).toBeInTheDocument();
     });
   });
 });

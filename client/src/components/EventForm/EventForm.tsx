@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
@@ -7,6 +7,7 @@ import { CircularProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
 
 const EventFormStyles = styled.form`
+  min-width: 350px;
   border: 1px solid #ccc;
   padding: 30px;
   display: flex;
@@ -50,11 +51,19 @@ interface EventFormBody {
   eventDate: string;
 }
 
+interface ValidationErrors {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  eventDate?: string;
+}
+
 const EventForm = () => {
-  const [disabled, setDisabled] = React.useState(true);
-  const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
-  const [formData, setFormData] = React.useState({
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [formData, setFormData] = useState<EventFormBody>({
     firstName: "",
     lastName: "",
     email: "",
@@ -78,13 +87,19 @@ const EventForm = () => {
           setDisabled(true);
           setLoading(true);
           const response = await axios.post("/api/events", formData);
+          if (response.status === 201) {
+            setSuccess(true);
+          }
+          console.log("STATUS", response.status);
+
           setDisabled(false);
           setLoading(false);
-          setSuccess(true);
-        } catch (error) {
-          console.log(error);
+        } catch (error: any) {
+          // if (error.response.status === 400) {
+          console.log(error.response.data.validationErrors);
+          setErrors(error.response.data.validationErrors);
+          // }
           setLoading(false);
-
           setDisabled(false);
         }
       };
@@ -95,8 +110,8 @@ const EventForm = () => {
       <InputField
         onChange={onInputChange}
         // color="success"
-        // error
-        // helperText="First Name is required"
+        error={!!errors.firstName}
+        helperText={errors.firstName}
         type="text"
         required
         id="firstName"
