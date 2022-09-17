@@ -81,6 +81,17 @@ describe("<EventForm/>", () => {
       button = screen.getByRole("button", { name: "Add Event" });
     };
 
+    const generateValidationErrors = (field: string, message: string) => {
+      return rest.post("/api/events", async (req, res, ctx) => {
+        return res(
+          ctx.status(400),
+          ctx.json({
+            validationErrors: { [field]: message },
+          })
+        );
+      });
+    };
+
     it("sends First name, Last name, Email, Event date to the server when clicking button", async () => {
       setup();
       userEvent.click(button);
@@ -107,6 +118,18 @@ describe("<EventForm/>", () => {
       setup();
       await waitFor(() => userEvent.click(button));
       expect(screen.getByTestId("loading-button")).toBeInTheDocument();
+    });
+
+    it("hides spinner and enables button after api call is finished", async () => {
+      server.use(
+        generateValidationErrors("firstName", "First name is required")
+      );
+      setup();
+      await waitFor(() => userEvent.click(button));
+      expect(screen.queryByTestId("loading-button")).toBeInTheDocument();
+      await screen.findByText(/First name is required/i);
+      expect(screen.queryByTestId("loading-button")).not.toBeInTheDocument();
+      expect(button).toBeEnabled();
     });
 
     it("displays success message after successful api call", async () => {
@@ -145,17 +168,6 @@ describe("<EventForm/>", () => {
       await waitFor(() => userEvent.click(button));
       expect(validationError).toBeInTheDocument();
     });
-
-    const generateValidationErrors = (field: string, message: string) => {
-      return rest.post("/api/events", async (req, res, ctx) => {
-        return res(
-          ctx.status(400),
-          ctx.json({
-            validationErrors: { [field]: message },
-          })
-        );
-      });
-    };
 
     it.each`
       field          | message
