@@ -1,129 +1,38 @@
 import Header from "../common/Header";
 import EventsListsStyle from "./EventsListStyle";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { CircularProgress } from "@mui/material";
+import EventsTable from "./EventsTable";
 
 const EventsList = () => {
+  const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const getEvents = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get("/api/events/all");
+      setEvents(response.data);
+      setIsLoading(false);
+    } catch (error: any) {
+      setError(error);
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getEvents();
+  }, []);
   return (
     <EventsListsStyle>
       <Header style={{ fontSize: 48 }}>Events List</Header>
-      <table>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Email</th>
-            <th>Event date</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@doe.com</td>
-            <td>2021-01-01</td>
-            <td>
-              <button>Edit</button>
-            </td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@doe.com</td>
-            <td>2021-01-01</td>
-            <td>
-              <button>Edit</button>
-            </td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@doe.com</td>
-            <td>2021-01-01</td>
-            <td>
-              <button>Edit</button>
-            </td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@doe.com</td>
-            <td>2021-01-01</td>
-            <td>
-              <button>Edit</button>
-            </td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@doe.com</td>
-            <td>2021-01-01</td>
-            <td>
-              <button>Edit</button>
-            </td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@doe.com</td>
-            <td>2021-01-01</td>
-            <td>
-              <button>Edit</button>
-            </td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@doe.com</td>
-            <td>2021-01-01</td>
-            <td>
-              <button>Edit</button>
-            </td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@doe.com</td>
-            <td>2021-01-01</td>
-            <td>
-              <button>Edit</button>
-            </td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      {isLoading ? (
+        <CircularProgress data-testid="loading-spinner" size={150} />
+      ) : (
+        <EventsTable events={events} />
+      )}
     </EventsListsStyle>
   );
 };
