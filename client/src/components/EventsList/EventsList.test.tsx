@@ -10,11 +10,6 @@ describe("<EventsList/>", () => {
       const header = screen.getByRole("heading", { name: "Events List" });
       expect(header).toBeInTheDocument();
     });
-    it("has a list of events", () => {
-      render(<EventsList />);
-      const list = screen.getByRole("list");
-      expect(list).toBeInTheDocument();
-    });
 
     it("has table rendered", () => {
       render(<EventsList />);

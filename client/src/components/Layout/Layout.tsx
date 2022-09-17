@@ -5,9 +5,12 @@ import {
   StyledEngineProvider,
 } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { green, orange } from "@mui/material/colors";
 
 const darkTheme = createTheme({
   palette: {
+    primary: green,
+    secondary: orange,
     mode: "light",
   },
 });
@@ -20,6 +23,7 @@ const LayoutStyles = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #333333;
 `;
 
 const Layout = (props: any) => {

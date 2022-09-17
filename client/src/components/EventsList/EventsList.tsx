@@ -1,5 +1,4 @@
 import Header from "../common/Header";
-import Container from "../Layout/Container";
 import EventsListsStyle from "./EventsListStyle";
 
 const EventsList = () => {
