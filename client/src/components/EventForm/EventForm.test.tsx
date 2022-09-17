@@ -59,8 +59,8 @@ describe("<EventForm/>", () => {
     );
 
     beforeEach(() => {
-      server.resetHandlers();
       counter = 0;
+      server.resetHandlers();
     });
     beforeAll(() => server.listen());
 
@@ -85,7 +85,10 @@ describe("<EventForm/>", () => {
       button = screen.getByRole("button", { name: "Add Event" });
     };
 
-    const generateValidationErrors = (field: string, message: string) => {
+    const generateValidationErrors = (
+      field: string | any,
+      message: string | any
+    ) => {
       return rest.post("/api/events", async (req, res, ctx) => {
         return res(
           ctx.status(400),
@@ -200,5 +203,23 @@ describe("<EventForm/>", () => {
       userEvent.type(firstNameInput, "updatedInput");
       expect(validationError).not.toBeInTheDocument();
     });
+
+    it.each`
+      field          | message                     | label           | updatedValue
+      ${"firstName"} | ${"First name is required"} | ${"First name"} | ${"updatedInput"}
+      ${"lastName"}  | ${"Last name is required"}  | ${"Last name"}  | ${"updatedInput"}
+      ${"email"}     | ${"Email is required"}      | ${"Email"}      | ${"updatedInput"}
+    `(
+      "clears validation error for $field after user starts typing",
+      async ({ field, message, label, updatedValue }) => {
+        server.use(generateValidationErrors(field, message));
+        setup();
+        userEvent.click(button);
+        const validationError = await screen.findByText(message);
+        const input = screen.getByLabelText(new RegExp(label, "i"));
+        userEvent.type(input, updatedValue);
+        expect(validationError).not.toBeInTheDocument();
+      }
+    );
   });
 });

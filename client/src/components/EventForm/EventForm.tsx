@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { MouseEventHandler, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
@@ -44,6 +44,11 @@ const LoadingButton = ({ loading, handleSubmitForm, disabled }: any) => {
   );
 };
 
+const Header = styled.h1`
+  font-family: "Permanent Marker", cursive;
+  text-align: center;
+`;
+
 interface EventFormBody {
   firstName: string;
   lastName: string;
@@ -70,39 +75,40 @@ const EventForm = () => {
     eventDate: "",
   });
 
-  const onInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = target;
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { id, value } = event.target;
     setFormData({ ...formData, [id]: value });
     setErrors({ ...errors, [id]: "" });
   };
 
-  const handleSubmitForm =
-    async (): // event: MouseEventHandler<HTMLButtonElement>,
+  const handleSubmitForm = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): // formData: EventFormBody
+  Promise<void> =>
     // formData: EventFormBody
-    Promise<void> =>
-      // formData: EventFormBody
-      {
-        // event.preventDefault();
-        try {
-          setDisabled(true);
-          setLoading(true);
-          const response = await axios.post("/api/events", formData);
-          if (response.status === 201) {
-            setSuccess(true);
-          }
-
-          setDisabled(false);
-          setLoading(false);
-        } catch (error: any) {
-          setErrors(error.response.data.validationErrors);
-          setLoading(false);
-          setDisabled(false);
+    {
+      event.preventDefault();
+      try {
+        setDisabled(true);
+        setLoading(true);
+        const response = await axios.post("/api/events", formData);
+        if (response.status === 201) {
+          setSuccess(true);
         }
-      };
+
+        setDisabled(false);
+        setLoading(false);
+      } catch (error: any) {
+        setErrors(error.response.data.validationErrors);
+        setLoading(false);
+        setDisabled(false);
+      }
+    };
 
   return (
-    <EventFormStyles>
-      <h1 style={{ fontFamily: "Permanent Marker" }}>Create Event</h1>
+    <EventFormStyles onSubmit={handleSubmitForm}>
+      <Header>Create Event</Header>
       <InputField
         onChange={onInputChange}
         // color="success"
@@ -113,6 +119,7 @@ const EventForm = () => {
         id="firstName"
         label="First name"
         variant="outlined"
+        data-testid="first-name"
       />
 
       <InputField
@@ -125,6 +132,7 @@ const EventForm = () => {
         id="lastName"
         label="Last name"
         variant="outlined"
+        data-testid="last-name"
       />
 
       <InputField
@@ -137,6 +145,7 @@ const EventForm = () => {
         id="email"
         label="Email"
         variant="outlined"
+        data-testid="email"
       />
 
       <InputField
@@ -152,6 +161,7 @@ const EventForm = () => {
         InputLabelProps={{
           shrink: true,
         }}
+        data-testid="event-date"
       />
 
       <div>
