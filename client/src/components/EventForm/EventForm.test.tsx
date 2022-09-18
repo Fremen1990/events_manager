@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import "@testing-library/jest-dom";
+import EventsProvider from "../../context/EventsContext";
 
 describe("<EventForm/>", () => {
   describe("Layout - when the form is rendered", () => {
@@ -73,7 +74,11 @@ describe("<EventForm/>", () => {
       button: HTMLElement;
 
     const setup = () => {
-      render(<EventForm />);
+      render(
+        <EventsProvider>
+          <EventForm />
+        </EventsProvider>
+      );
       firstNameInput = screen.getByLabelText(/First name/i);
       lastNameInput = screen.getByLabelText(/Last name/i);
       emailInput = screen.getByLabelText(/Email/i);
@@ -101,9 +106,8 @@ describe("<EventForm/>", () => {
 
     it("sends First name, Last name, Email, Event date to the server when clicking button", async () => {
       setup();
-      userEvent.click(button);
+      await userEvent.click(button);
       await screen.findByText(/Event added/i);
-
       expect(requestBody).toEqual({
         firstName: "Testing Joe",
         lastName: "Testing Joyington",

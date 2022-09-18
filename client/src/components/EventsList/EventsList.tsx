@@ -1,51 +1,24 @@
 import Header from "../common/Header";
 import EventsListsStyle from "./EventsListStyle";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useContext, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 import EventsTable from "./EventsTable";
+import { EventsContext } from "../../context/EventsContext";
+import { EventsContextType } from "../../types/EventFormTypes";
 
 const EventsList = () => {
-  const [events, setEvents] = useState([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState(null);
-
-  const getEvents = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get("/api/events/all");
-      setEvents(response.data);
-      setIsLoading(false);
-    } catch (error: any) {
-      setError(error);
-      console.log(error);
-    }
-  };
-
-  const deleteEvent = async (id: number) => {
-    try {
-      setIsLoading(true);
-      const response = await axios.delete(`/api/events/${id}`);
-      const newEvents = events.filter((event: any) => event.id !== id); // Faster, without querying the server
-      // getEvents(); // Slower, with querying the server
-      setEvents(newEvents);
-      setIsLoading(false);
-    } catch (error: any) {
-      setError(error);
-      console.log(error);
-    }
-  };
+  const { getEvents, loading } = useContext(EventsContext) as EventsContextType;
 
   useEffect(() => {
-    getEvents();
+    getEvents && getEvents();
   }, []);
   return (
     <EventsListsStyle>
       <Header style={{ fontSize: 48 }}>Events List</Header>
-      {isLoading ? (
+      {loading ? (
         <CircularProgress data-testid="loading-spinner" size={150} />
       ) : (
-        <EventsTable events={events} deleteEvent={deleteEvent} />
+        <EventsTable />
       )}
     </EventsListsStyle>
   );

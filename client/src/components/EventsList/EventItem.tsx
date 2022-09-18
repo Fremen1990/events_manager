@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import moment from "moment";
+import { EventsContext } from "../../context/EventsContext";
 
-const EventItem = ({ event, index, handleEditForm, deleteEvent }: any) => {
+const EventItem = ({ event, index }: any) => {
   const { id, firstName, lastName, email, eventDate } = event;
+
+  const { deleteEvent, updateEvent, setEditForm } = useContext(EventsContext);
+
+  const handleUpdate = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setEditForm && setEditForm(true);
+    updateEvent && updateEvent(id, { firstName, lastName, email, eventDate });
+  };
 
   const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    deleteEvent(id);
+    deleteEvent && deleteEvent(id);
   };
 
   return (
@@ -18,7 +27,7 @@ const EventItem = ({ event, index, handleEditForm, deleteEvent }: any) => {
       <td>{moment(eventDate).format("Do MM YYYY")}</td>
       <td>{moment(eventDate).fromNow()}</td>
       <td>
-        <button onClick={handleEditForm}>Edit</button>
+        <button onClick={handleUpdate}>Edit</button>
       </td>
       <td>
         <button onClick={handleDelete}>Delete</button>

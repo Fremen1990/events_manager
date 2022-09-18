@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import EventItem from "./EventItem";
+import { Event, EventsContextType } from "../../types/EventFormTypes";
+import { EventsContext } from "../../context/EventsContext";
 
-const EventsTable = ({ events, deleteEvent }: any) => {
-  const handleEditForm = () => {
-    console.log("Edit");
-  };
+const EventsTable = ({}: any) => {
+  const { events } = useContext(EventsContext) as EventsContextType;
 
   return (
     <table>
@@ -19,16 +19,12 @@ const EventsTable = ({ events, deleteEvent }: any) => {
         </tr>
       </thead>
       <tbody>
-        {events.map((event: any, index: number) => (
-          <tr key={event.id}>
-            <EventItem
-              event={event}
-              index={index}
-              handleEditForm={handleEditForm}
-              deleteEvent={deleteEvent}
-            />
-          </tr>
-        ))}
+        {events &&
+          events.map((event: Event, index: number) => (
+            <tr key={event.id}>
+              <EventItem event={event} index={index} />
+            </tr>
+          ))}
       </tbody>
     </table>
   );

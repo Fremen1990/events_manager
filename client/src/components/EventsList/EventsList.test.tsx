@@ -1,10 +1,11 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import EventsList from "./EventsList";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 import userEvent from "@testing-library/user-event";
+import EventsProvider from "../../context/EventsContext";
 
 describe("<EventsList/>", () => {
   it("has header with name: 'Events List'", () => {
@@ -31,12 +32,19 @@ describe("<EventsList/>", () => {
       },
     ];
 
-    let requestBody: any;
     const server = setupServer(
       rest.get("api/events/all", async (req, res, ctx) => {
         return res(ctx.status(200), ctx.json(responseMock));
       })
     );
+
+    const renderEventListWithProvider = () => {
+      render(
+        <EventsProvider>
+          <EventsList />
+        </EventsProvider>
+      );
+    };
 
     beforeEach(() => {
       server.resetHandlers();
@@ -53,36 +61,36 @@ describe("<EventsList/>", () => {
     });
 
     it('has a button with name "Edit" in the table', async () => {
-      render(<EventsList />);
+      renderEventListWithProvider();
       const buttons = await screen.findAllByRole("button", { name: "Edit" });
       expect(buttons.length).toBeGreaterThan(0);
     });
 
     it('has a button with name "Delete" in the table', async () => {
-      render(<EventsList />);
+      renderEventListWithProvider();
       const buttons = await screen.findAllByRole("button", { name: "Delete" });
       expect(buttons.length).toBeGreaterThan(0);
     });
 
     it("has a cell in the table", async () => {
-      render(<EventsList />);
+      renderEventListWithProvider();
       const cells = await screen.findAllByRole("cell");
       expect(cells.length).toBeGreaterThan(0);
     });
 
     it("gets the data from the server", async () => {
-      render(<EventsList />);
+      renderEventListWithProvider();
       expect((await screen.findAllByText("John")).length).toBeGreaterThan(0);
     });
 
     it("displays spinner when the data is loading", async () => {
-      render(<EventsList />);
+      renderEventListWithProvider();
       const spinner = await screen.getByTestId("loading-spinner");
       expect(spinner).toBeInTheDocument();
     });
 
     it("deletes the event", async () => {
-      render(<EventsList />);
+      renderEventListWithProvider();
       const John = await screen.findAllByText("John");
       expect(John[0]).toBeInTheDocument();
       const buttons = await screen.findAllByRole("button", { name: "Delete" });

@@ -3,7 +3,12 @@ import { CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
 import React from "react";
 
-const LoadingButton = ({ loading, handleSubmitForm, disabled }: any) => {
+const LoadingButton = ({
+  loading,
+  handleSubmitForm,
+  disabled,
+  children,
+}: any) => {
   return (
     <Container>
       {loading ? (
@@ -15,7 +20,7 @@ const LoadingButton = ({ loading, handleSubmitForm, disabled }: any) => {
           disabled={disabled}
           size="large"
         >
-          Add Event
+          {children}
         </Button>
       )}
     </Container>
