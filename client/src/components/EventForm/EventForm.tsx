@@ -7,7 +7,6 @@ import EventFormStyles from "./EventFormStyle";
 import Header from "../common/Header";
 import Container from "../Layout/Container";
 import { EventsContext } from "../../context/EventsContext";
-import axios from "axios";
 
 const EventForm = () => {
   const initialForm = { firstName: "", lastName: "", email: "", eventDate: "" };
@@ -28,6 +27,7 @@ const EventForm = () => {
     editForm,
     eventToEdit,
     submitUpdateForm,
+    setDisabled,
   } = useContext(EventsContext) as EventsContextType;
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,27 +43,33 @@ const EventForm = () => {
     event.preventDefault();
     if (addEvent) addEvent(formData);
 
+    if (success) {
+      setFormData(initialForm);
+    }
+  };
+
+  const handleSubmitUpdateForm = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+
     if (editForm && eventToEdit)
       submitUpdateForm &&
         submitUpdateForm(currentEventId && currentEventId, formData);
+
     if (success) setFormData(initialForm);
   };
 
   const handleCancel = () => {
     setFormData(initialForm);
-    setErrors &&
-      setErrors({
-        firstName: "",
-        lastName: "",
-        email: "",
-        eventDate: "",
-      });
+    setErrors && setErrors(initialForm);
     setEditForm && setEditForm(false);
   };
 
   const handleCloseMessage = () => {
     setSuccess && setSuccess(false);
     setEditForm && setEditForm(false);
+    setFormData(initialForm);
   };
 
   useEffect(() => {
@@ -77,7 +83,7 @@ const EventForm = () => {
       <Header>{editForm && editForm ? "Edit Event" : "Create Event"}</Header>
       <InputField
         value={firstName}
-        // focused={true}
+        disabled={loading}
         onChange={onInputChange}
         error={errors && !!errors.firstName}
         helperText={errors && errors.firstName}
@@ -91,6 +97,7 @@ const EventForm = () => {
 
       <InputField
         value={lastName}
+        disabled={loading}
         onChange={onInputChange}
         error={errors && !!errors.lastName}
         helperText={errors && errors.lastName}
@@ -104,6 +111,7 @@ const EventForm = () => {
 
       <InputField
         value={email}
+        disabled={loading}
         onChange={onInputChange}
         error={errors && !!errors.email}
         helperText={errors && errors.email}
@@ -117,6 +125,7 @@ const EventForm = () => {
 
       <InputField
         value={eventDate}
+        disabled={loading}
         onChange={onInputChange}
         error={errors && !!errors.eventDate}
         helperText={errors && errors.eventDate}
@@ -139,6 +148,7 @@ const EventForm = () => {
             severity="success"
             variant="filled"
             closeText="Close"
+            data-testid={"success-message"}
           >
             {editForm && editForm ? "Event updated 👌" : "Event added 💪"}
           </Alert>
@@ -156,7 +166,9 @@ const EventForm = () => {
 
             <LoadingButton
               loading={loading && loading}
-              onClick={handleSubmitForm}
+              onClick={
+                editForm && editForm ? handleSubmitUpdateForm : handleSubmitForm
+              }
               disabled={disabled && disabled}
               data-testid="add-event-button"
               role="button"

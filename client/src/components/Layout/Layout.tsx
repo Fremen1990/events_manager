@@ -24,6 +24,7 @@ const LayoutStyles = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #333333;
+  overflow: hidden;
 `;
 
 const Layout = (props: any) => {

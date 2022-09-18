@@ -16,34 +16,37 @@ describe("Interactions - when the list is rendered", () => {
 
   it('has a button with name "Edit" in the table', () => {
     render(<EventItem event={eventMock} index={1} />);
-    const buttons = screen.getByRole("button", { name: "Edit" });
-    expect(buttons).toBeInTheDocument();
+    const button = screen.getByTestId("edit-button");
+    expect(button).toBeInTheDocument();
   });
 
   it('has a button with name "Delete" in the table', () => {
     render(<EventItem event={eventMock} index={1} />);
-    const buttons = screen.getByRole("button", { name: "Delete" });
-    expect(buttons).toBeInTheDocument();
+    const button = screen.getByTestId("delete-button");
+    expect(button).toBeInTheDocument();
   });
 
-  it.skip('calls "onEdit" callback when the "Edit" button is clicked', () => {
+  it('calls "onEdit" callback when the "Edit" button is clicked', async () => {
     const updateEvent: any = jest.fn();
     render(
-      <EventsContext.Provider value={updateEvent}>
+      <EventsContext.Provider value={{ updateEvent }}>
         <EventItem event={eventMock} index={1} />
       </EventsContext.Provider>
     );
-    const button = screen.getByRole("button", { name: "Edit" });
-    userEvent.click(button);
+    const button = screen.getByTestId("edit-button");
+    await userEvent.click(button);
     expect(updateEvent).toHaveBeenCalled();
   });
-  it.skip('calls "onDelete" callback when the "Delete" button is clicked', () => {
-    const handleDeleteMock = jest.fn();
+
+  it('calls "onDelete" callback when the "Delete" button is clicked', () => {
+    const deleteEvent = jest.fn();
     render(
-      <EventItem event={eventMock} index={1} deleteEvent={handleDeleteMock} />
+      <EventsContext.Provider value={{ deleteEvent }}>
+        <EventItem event={eventMock} index={1} />
+      </EventsContext.Provider>
     );
-    const button = screen.getByRole("button", { name: "Delete" });
+    const button = screen.getByTestId("delete-button");
     button.click();
-    expect(handleDeleteMock).toHaveBeenCalled();
+    expect(deleteEvent).toHaveBeenCalled();
   });
 });

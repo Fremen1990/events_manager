@@ -7,6 +7,7 @@ const EventFormStyles = styled.form`
   display: flex;
   flex-direction: column;
   background-color: azure;
+  border-radius: 25px;
 `;
 
 export default EventFormStyles;

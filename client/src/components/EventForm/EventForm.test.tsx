@@ -157,7 +157,7 @@ describe("<EventForm/>", () => {
       const successMessage = new RegExp("Event added", "i");
       await waitFor(() => userEvent.click(button));
       await screen.findByText(successMessage);
-      const closeButton = screen.getByRole("button", { name: "Close" });
+      const closeButton = screen.getByTestId("success-message");
       userEvent.click(closeButton);
       expect(screen.queryByText(successMessage)).not.toBeInTheDocument();
     });
@@ -232,6 +232,16 @@ describe("<EventForm/>", () => {
       await waitFor(() => userEvent.keyboard("{enter}"));
       const result = await screen.findByText(successMessage);
       expect(result).toBeInTheDocument();
+    });
+
+    it("clears form after successful api call", async () => {
+      setup();
+      await waitFor(() => userEvent.click(button));
+      await screen.findByText(/Event added/i);
+      expect(firstNameInput).toHaveTextContent("");
+      expect(lastNameInput).toHaveTextContent("");
+      expect(emailInput).toHaveTextContent("");
+      expect(eventDateInput).toHaveTextContent("");
     });
   });
 });

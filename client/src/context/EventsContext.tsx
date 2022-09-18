@@ -19,6 +19,8 @@ const EventsProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [eventToEdit, setEventToEdit] = useState<EventFormBody | null>(null);
   const [currentEventId, setCurrentEventId] = useState<string | null>(null);
 
+  const initialForm = { firstName: "", lastName: "", email: "", eventDate: "" };
+
   const getEvents = async () => {
     setLoading(true);
     try {
@@ -33,13 +35,13 @@ const EventsProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const deleteEvent = async (id: string): Promise<void> => {
     try {
-      setLoading(true);
+      // setLoading(true); //  if not calling api not needed
       const response = await axios.delete(`/api/events/${id}`);
       const newEvents = events.filter((event: any) => event.id !== id); // Faster, without querying the server
       // getEvents(); // Slower, with querying the server
       setEvents(newEvents);
       setEditForm(false);
-      setLoading(false);
+      // setLoading(false);//  if not calling api not needed
     } catch (error: any) {
       setErrors(error);
       console.log(error);
@@ -69,10 +71,10 @@ const EventsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     id: string,
     formData: EventFormBody
   ): Promise<void> => {
+    setErrors(initialForm);
     setEditForm(true);
     setEventToEdit(formData);
     setCurrentEventId(id);
-    // console.log("UPDATE EVENT", id, formData);
   };
 
   const submitUpdateForm = async (
@@ -84,9 +86,9 @@ const EventsProvider: React.FC<PropsWithChildren> = ({ children }) => {
       setLoading(true);
       const response = await axios.put(`/api/events/${id}`, formData);
       if (response.status === 200) {
-        console.log("RESPONSE", response.data);
+        await getEvents();
         setSuccess(true);
-        setEditForm(false);
+        // setEditForm(false);
       }
 
       setDisabled(false);
@@ -114,6 +116,7 @@ const EventsProvider: React.FC<PropsWithChildren> = ({ children }) => {
         editForm,
         setEditForm,
         disabled,
+        setDisabled,
         success,
         setSuccess,
         setErrors,

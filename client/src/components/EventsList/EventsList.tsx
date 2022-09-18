@@ -16,7 +16,7 @@ const EventsList = () => {
     <EventsListsStyle>
       <Header style={{ fontSize: 48 }}>Events List</Header>
       {events && events.length === 0 ? (
-        <span>There is no events on the list yet</span>
+        <h2 style={{ marginTop: "15%" }}>There is no events on the list yet</h2>
       ) : (
         <EventsTable />
       )}

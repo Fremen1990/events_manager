@@ -28,6 +28,7 @@ export interface EventsContextType {
   success?: boolean;
   setSuccess?: Dispatch<SetStateAction<boolean>>;
   disabled?: boolean;
+  setDisabled?: Dispatch<SetStateAction<boolean>>;
   errors?: ValidationErrors;
   events?: Event[];
   editForm?: boolean;

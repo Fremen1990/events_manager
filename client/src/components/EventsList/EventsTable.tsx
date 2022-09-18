@@ -3,12 +3,25 @@ import EventItem from "./EventItem";
 import { Event, EventsContextType } from "../../types/EventFormTypes";
 import { EventsContext } from "../../context/EventsContext";
 import { CircularProgress } from "@mui/material";
+import styled from "styled-components";
+
+const TrItem = styled.tr`
+  cursor: pointer;
+  &:hover {
+    background-color: #4caf50;
+    font-weight: bold;
+  }
+`;
 
 const EventsTable = ({}: any) => {
   const { events, loading } = useContext(EventsContext) as EventsContextType;
 
   return (
-    <table>
+    <table
+      style={{
+        borderCollapse: "collapse",
+      }}
+    >
       <thead>
         <tr>
           <th>No</th>
@@ -25,9 +38,9 @@ const EventsTable = ({}: any) => {
         ) : (
           events &&
           events.map((event: Event, index: number) => (
-            <tr key={event.id}>
+            <TrItem key={event.id} style={{ borderBottom: "1px solid black" }}>
               <EventItem event={event} index={index} />
-            </tr>
+            </TrItem>
           ))
         )}
       </tbody>

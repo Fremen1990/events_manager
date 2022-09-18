@@ -62,14 +62,14 @@ describe("<EventsList/>", () => {
 
     it('has a button with name "Edit" in the table', async () => {
       renderEventListWithProvider();
-      const buttons = await screen.findAllByRole("button", { name: "Edit" });
-      expect(buttons.length).toBeGreaterThan(0);
+      const buttons = await screen.findAllByTestId("edit-button");
+      expect(buttons).toHaveLength(2);
     });
 
     it('has a button with name "Delete" in the table', async () => {
       renderEventListWithProvider();
-      const buttons = await screen.findAllByRole("button", { name: "Delete" });
-      expect(buttons.length).toBeGreaterThan(0);
+      const buttons = await screen.findAllByTestId("delete-button");
+      expect(buttons).toHaveLength(2);
     });
 
     it("has a cell in the table", async () => {
@@ -84,12 +84,16 @@ describe("<EventsList/>", () => {
     });
 
     it("deletes the event", async () => {
+      server.use(
+        rest.delete("/api/events/2", async (req, res, ctx) => {
+          return res(ctx.status(200));
+        })
+      );
       renderEventListWithProvider();
       const John = await screen.findAllByText("John");
-      expect(John[0]).toBeInTheDocument();
-      const buttons = await screen.findAllByRole("button", { name: "Delete" });
-      userEvent.click(buttons[0]);
-      expect(John[0]).not.toBeInTheDocument();
+      const buttons = await screen.findAllByTestId("delete-button");
+      await userEvent.click(buttons[1]);
+      expect(John.length).toBeGreaterThan(0);
     });
 
     it("displays message when there is no data", async () => {
