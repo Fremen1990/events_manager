@@ -1,119 +1,92 @@
-import React, { MouseEventHandler, useState } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import styled from "styled-components";
-import axios from "axios";
-import { CircularProgress } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
 import Alert from "@mui/material/Alert";
-
-const EventFormStyles = styled.form`
-  min-width: 350px;
-  border: 1px solid #ccc;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const InputField = styled(TextField)`
-  margin: 1rem 0;
-  font-family: "Permanent Marker", cursive;
-`;
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const LoadingButton = ({ loading, handleSubmitForm, disabled }: any) => {
-  return (
-    <Container>
-      {loading ? (
-        <CircularProgress data-testid="loading-button" />
-      ) : (
-        <Button
-          onClick={handleSubmitForm}
-          variant="contained"
-          disabled={disabled}
-          size="large"
-        >
-          Add Event
-        </Button>
-      )}
-    </Container>
-  );
-};
-
-const Header = styled.h1`
-  font-family: "Permanent Marker", cursive;
-  text-align: center;
-`;
-
-interface EventFormBody {
-  firstName: string;
-  lastName: string;
-  email: string;
-  eventDate: string;
-}
-
-interface ValidationErrors {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  eventDate?: string;
-}
+import InputField from "../common/InputField";
+import LoadingButton from "../LoadingButton/LoadingButton";
+import { EventFormBody, EventsContextType } from "../../types/EventFormTypes";
+import EventFormStyles from "./EventFormStyle";
+import Header from "../common/Header";
+import Container from "../Layout/Container";
+import { EventsContext } from "../../context/EventsContext";
 
 const EventForm = () => {
-  const [disabled, setDisabled] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
-  const [errors, setErrors] = useState<ValidationErrors>({});
-  const [formData, setFormData] = useState<EventFormBody>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    eventDate: "",
-  });
+  const initialForm = { firstName: "", lastName: "", email: "", eventDate: "" };
+
+  const [formData, setFormData] = useState<EventFormBody>(initialForm);
+  const { firstName, lastName, email, eventDate } = formData;
+
+  const {
+    currentEventId,
+    addEvent,
+    disabled,
+    loading,
+    success,
+    errors,
+    setSuccess,
+    setErrors,
+    setEditForm,
+    editForm,
+    eventToEdit,
+    submitUpdateForm,
+    setDisabled,
+  } = useContext(EventsContext) as EventsContextType;
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const { id, value } = event.target;
     setFormData({ ...formData, [id]: value });
-    setErrors({ ...errors, [id]: "" });
+    setErrors && setErrors({ ...errors, [id]: "" });
   };
 
   const handleSubmitForm = async (
     event: React.FormEvent<HTMLFormElement>
-  ): // formData: EventFormBody
-  Promise<void> =>
-    // formData: EventFormBody
-    {
-      event.preventDefault();
-      try {
-        setDisabled(true);
-        setLoading(true);
-        const response = await axios.post("/api/events", formData);
-        if (response.status === 201) {
-          setSuccess(true);
-        }
+  ): Promise<void> => {
+    event.preventDefault();
+    if (addEvent) addEvent(formData);
 
-        setDisabled(false);
-        setLoading(false);
-      } catch (error: any) {
-        setErrors(error.response.data.validationErrors);
-        setLoading(false);
-        setDisabled(false);
-      }
-    };
+    if (success) {
+      setFormData(initialForm);
+    }
+  };
+
+  const handleSubmitUpdateForm = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+
+    if (editForm && eventToEdit)
+      submitUpdateForm &&
+        submitUpdateForm(currentEventId && currentEventId, formData);
+
+    if (success) setFormData(initialForm);
+  };
+
+  const handleCancel = () => {
+    setFormData(initialForm);
+    setErrors && setErrors(initialForm);
+    setEditForm && setEditForm(false);
+  };
+
+  const handleCloseMessage = () => {
+    setSuccess && setSuccess(false);
+    setEditForm && setEditForm(false);
+    setFormData(initialForm);
+  };
+
+  useEffect(() => {
+    if (editForm) {
+      eventToEdit && setFormData(eventToEdit);
+    }
+  }, [editForm, eventToEdit]);
 
   return (
     <EventFormStyles onSubmit={handleSubmitForm}>
-      <Header>Create Event</Header>
+      <Header>{editForm && editForm ? "Edit Event" : "Create Event"}</Header>
       <InputField
+        value={firstName}
+        disabled={loading}
         onChange={onInputChange}
-        // color="success"
-        error={!!errors.firstName}
-        helperText={errors.firstName}
+        error={errors && !!errors.firstName}
+        helperText={errors && errors.firstName}
         type="text"
         required
         id="firstName"
@@ -123,10 +96,11 @@ const EventForm = () => {
       />
 
       <InputField
+        value={lastName}
+        disabled={loading}
         onChange={onInputChange}
-        // color="success"
-        error={!!errors.lastName}
-        helperText={errors.lastName}
+        error={errors && !!errors.lastName}
+        helperText={errors && errors.lastName}
         type="text"
         required
         id="lastName"
@@ -136,10 +110,11 @@ const EventForm = () => {
       />
 
       <InputField
+        value={email}
+        disabled={loading}
         onChange={onInputChange}
-        // color="success"
-        error={!!errors.email}
-        helperText={errors.email}
+        error={errors && !!errors.email}
+        helperText={errors && errors.email}
         type="email"
         required
         id="email"
@@ -149,10 +124,11 @@ const EventForm = () => {
       />
 
       <InputField
+        value={eventDate}
+        disabled={loading}
         onChange={onInputChange}
-        // color="success"
-        error={!!errors.eventDate}
-        helperText={errors.eventDate}
+        error={errors && !!errors.eventDate}
+        helperText={errors && errors.eventDate}
         type="date"
         required
         id="eventDate"
@@ -164,25 +140,45 @@ const EventForm = () => {
         data-testid="event-date"
       />
 
-      <div>
-        {success ? (
+      <Container>
+        {success && success ? (
           <Alert
+            style={{ cursor: "pointer" }}
+            onClick={handleCloseMessage}
             severity="success"
             variant="filled"
             closeText="Close"
-            onClose={() => setSuccess(false)}
+            data-testid={"success-message"}
           >
-            Event added 💪
+            {editForm && editForm ? "Event updated 👌" : "Event added 💪"}
           </Alert>
         ) : (
-          <LoadingButton
-            loading={loading}
-            handleSubmitForm={handleSubmitForm}
-            disabled={disabled}
-            data-testid="add-event-button"
-          />
+          <>
+            {editForm && editForm && (
+              <LoadingButton
+                color="warning"
+                onClick={handleCancel}
+                type="button"
+              >
+                Cancel
+              </LoadingButton>
+            )}
+
+            <LoadingButton
+              loading={loading && loading}
+              onClick={
+                editForm && editForm ? handleSubmitUpdateForm : handleSubmitForm
+              }
+              disabled={disabled && disabled}
+              data-testid="add-event-button"
+              role="button"
+              type="submit"
+            >
+              {editForm && editForm ? "Save Changes" : "Add Event"}
+            </LoadingButton>
+          </>
         )}
-      </div>
+      </Container>
     </EventFormStyles>
   );
 };
