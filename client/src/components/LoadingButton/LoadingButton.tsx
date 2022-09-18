@@ -5,9 +5,11 @@ import React from "react";
 
 const LoadingButton = ({
   loading,
-  handleSubmitForm,
+  onClick,
   disabled,
   children,
+  color,
+  type,
 }: any) => {
   return (
     <Container>
@@ -15,10 +17,12 @@ const LoadingButton = ({
         <CircularProgress data-testid="loading-button" />
       ) : (
         <Button
-          onClick={handleSubmitForm}
+          type={type}
+          onClick={onClick}
           variant="contained"
           disabled={disabled}
           size="large"
+          color={color}
         >
           {children}
         </Button>

@@ -23,12 +23,14 @@ export interface Event {
 }
 
 export interface EventsContextType {
+  currentEventId?: string | null | undefined;
   loading?: boolean;
   success?: boolean;
   setSuccess?: Dispatch<SetStateAction<boolean>>;
   disabled?: boolean;
   errors?: ValidationErrors;
   events?: Event[];
+  editForm?: boolean;
   setEditForm?: (editForm: boolean) => void;
   setEvents?: (events: Event[]) => void;
   addEvent?: (event: EventFormBody) => void;
@@ -37,4 +39,10 @@ export interface EventsContextType {
   getEvent?: (id: string) => void;
   getEvents?: () => void;
   setErrors?: (errors: ValidationErrors) => void;
+  eventToEdit?: EventFormBody | null;
+  setEventToEdit?: (event: EventFormBody) => void;
+  submitUpdateForm?: (
+    id: string | null | undefined,
+    formData: EventFormBody
+  ) => void;
 }

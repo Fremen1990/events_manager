@@ -16,6 +16,8 @@ const EventsProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [disabled, setDisabled] = useState<boolean>(false);
   const [editForm, setEditForm] = useState<boolean>(false);
+  const [eventToEdit, setEventToEdit] = useState<EventFormBody | null>(null);
+  const [currentEventId, setCurrentEventId] = useState<string | null>(null);
 
   const getEvents = async () => {
     setLoading(true);
@@ -36,6 +38,7 @@ const EventsProvider: React.FC<PropsWithChildren> = ({ children }) => {
       const newEvents = events.filter((event: any) => event.id !== id); // Faster, without querying the server
       // getEvents(); // Slower, with querying the server
       setEvents(newEvents);
+      setEditForm(false);
       setLoading(false);
     } catch (error: any) {
       setErrors(error);
@@ -66,12 +69,41 @@ const EventsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     id: string,
     formData: EventFormBody
   ): Promise<void> => {
-    console.log("UPDATE EVENT");
+    setEditForm(true);
+    setEventToEdit(formData);
+    setCurrentEventId(id);
+    // console.log("UPDATE EVENT", id, formData);
+  };
+
+  const submitUpdateForm = async (
+    id: string | null | undefined,
+    formData: EventFormBody
+  ): Promise<void> => {
+    try {
+      setDisabled(true);
+      setLoading(true);
+      const response = await axios.put(`/api/events/${id}`, formData);
+      if (response.status === 200) {
+        console.log("RESPONSE", response.data);
+        setSuccess(true);
+        setEditForm(false);
+      }
+
+      setDisabled(false);
+      setLoading(false);
+    } catch (error: any) {
+      console.log(error);
+      setErrors(error.response.data.validationErrors);
+      setLoading(false);
+      setDisabled(false);
+    }
   };
 
   return (
     <EventsContext.Provider
       value={{
+        currentEventId,
+        eventToEdit,
         errors,
         events,
         getEvents,
@@ -79,11 +111,13 @@ const EventsProvider: React.FC<PropsWithChildren> = ({ children }) => {
         deleteEvent,
         addEvent,
         updateEvent,
+        editForm,
         setEditForm,
         disabled,
         success,
         setSuccess,
         setErrors,
+        submitUpdateForm,
       }}
     >
       {children}

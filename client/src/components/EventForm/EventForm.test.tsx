@@ -225,5 +225,13 @@ describe("<EventForm/>", () => {
         expect(validationError).not.toBeInTheDocument();
       }
     );
+
+    it("submits form when pressing enter", async () => {
+      setup();
+      const successMessage = new RegExp("Event added", "i");
+      await waitFor(() => userEvent.keyboard("{enter}"));
+      const result = await screen.findByText(successMessage);
+      expect(result).toBeInTheDocument();
+    });
   });
 });

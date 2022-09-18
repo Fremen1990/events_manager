@@ -83,12 +83,6 @@ describe("<EventsList/>", () => {
       expect((await screen.findAllByText("John")).length).toBeGreaterThan(0);
     });
 
-    it("displays spinner when the data is loading", async () => {
-      renderEventListWithProvider();
-      const spinner = await screen.getByTestId("loading-spinner");
-      expect(spinner).toBeInTheDocument();
-    });
-
     it("deletes the event", async () => {
       renderEventListWithProvider();
       const John = await screen.findAllByText("John");
@@ -96,6 +90,20 @@ describe("<EventsList/>", () => {
       const buttons = await screen.findAllByRole("button", { name: "Delete" });
       userEvent.click(buttons[0]);
       expect(John[0]).not.toBeInTheDocument();
+    });
+
+    it("displays message when there is no data", async () => {
+      server.use(
+        rest.get("api/events/all", async (req, res, ctx) => {
+          return res(ctx.status(200), ctx.json([]));
+        })
+      );
+      renderEventListWithProvider();
+      const message = await screen.findByText(
+        "There is no events on the list yet"
+      );
+      expect(message).toBeInTheDocument();
+      expect(message).toHaveTextContent("There is no events on the list yet");
     });
   });
 });

@@ -2,6 +2,11 @@ import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import EventsTable from "./EventsTable";
+import { setupServer } from "msw/node";
+import { rest } from "msw";
+import EventsProvider, { EventsContext } from "../../context/EventsContext";
+import EventForm from "../EventForm/EventForm";
+import userEvent from "@testing-library/user-event";
 
 describe("<EventsTable/>", () => {
   const eventsMock = [
@@ -52,6 +57,16 @@ describe("<EventsTable/>", () => {
       render(<EventsTable events={eventsMock} />);
       const row = screen.getAllByRole("row");
       expect(row).toBeDefined();
+    });
+
+    it("displays spinner when the data is loading", async () => {
+      render(
+        <EventsContext.Provider value={{ loading: true }}>
+          <EventsTable />
+        </EventsContext.Provider>
+      );
+      const spinner = await screen.getByTestId("loading-spinner");
+      expect(spinner).toBeInTheDocument();
     });
   });
 });

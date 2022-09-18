@@ -2,9 +2,10 @@ import React, { useContext } from "react";
 import EventItem from "./EventItem";
 import { Event, EventsContextType } from "../../types/EventFormTypes";
 import { EventsContext } from "../../context/EventsContext";
+import { CircularProgress } from "@mui/material";
 
 const EventsTable = ({}: any) => {
-  const { events } = useContext(EventsContext) as EventsContextType;
+  const { events, loading } = useContext(EventsContext) as EventsContextType;
 
   return (
     <table>
@@ -19,12 +20,16 @@ const EventsTable = ({}: any) => {
         </tr>
       </thead>
       <tbody>
-        {events &&
+        {loading && loading ? (
+          <CircularProgress data-testid="loading-spinner" size={150} />
+        ) : (
+          events &&
           events.map((event: Event, index: number) => (
             <tr key={event.id}>
               <EventItem event={event} index={index} />
             </tr>
-          ))}
+          ))
+        )}
       </tbody>
     </table>
   );

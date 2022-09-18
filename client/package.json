@@ -7,6 +7,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:watch": "react-scripts test --watchAll",
+    "test:coverage": "react-scripts test -- --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "dependencies": {
@@ -35,6 +36,7 @@
     "@types/styled-components": "^5.1.26",
     "cypress": "^10.8.0"
   },
+
   "eslintConfig": {
     "extends": [
       "react-app",
