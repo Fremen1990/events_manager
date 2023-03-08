@@ -6,8 +6,10 @@
 DevOps:
 - [ ] NX monorepo
 - [ ] CI for tests
-- [ ] Deployment
+- [ ] Deployment on Vercel (api, web, mobile)
 - [ ] CD for deployment
+- [ ] Deployment on AWS EC2
+- [ ] CD for AWS deployment
 
 Backend:
 - [ ] Backend NestJS + TypeORM + GraphQL
@@ -29,6 +31,7 @@ Frontend:
 
 Mobile:
 - [ ] React Native
+- [ ] Mobile tests in Detox
 
 ------
 
