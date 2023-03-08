@@ -6,6 +6,7 @@
 DevOps:
 - [ ] NX monorepo
 - [ ] CI for tests
+- [ ] Deployment Static events-manager.devthomas.pl + events-manager.storybook.devthoms.pl + backend Heroku
 - [ ] Deployment on Vercel (api, web, mobile)
 - [ ] CD for deployment
 - [ ] Deployment on AWS EC2
@@ -24,7 +25,8 @@ Frontend:
 - [ ] MSW
 - [ ] Cypress
 - [ ] Login
-- [ ] Storybook
+- [ ] Storybook with addons
+- [ ] Publish static storybook on events-manager.storybook.devthomas.pl 
 - [ ] MaterialUI DataGrid
 - [ ] Dark Mode MUI
 - [ ] Mobile responsive
