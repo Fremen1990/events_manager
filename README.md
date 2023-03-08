@@ -15,6 +15,8 @@ Backend:
 - [ ] Backend NestJS + TypeORM + GraphQL
 - [ ] Backend Login + QR code
 - [ ] Testing with SuperTests 100% coverage
+- [ ] Prepare Swagger
+- [ ] Publish
 - [ ] Testing in Postman
 - [ ] Morpheus + Grafana monitoring on Docker container 
 
