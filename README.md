@@ -6,7 +6,7 @@
 DevOps:
 - [ ] NX monorepo
 - [ ] CI for tests
-- [ ] Deployment Static events-manager.devthomas.pl + events-manager.storybook.devthoms.pl + events-manager.test-coverage-fe.devthomas.pl + events-manager.test-coverage-be.devthomas.pl +  backend Heroku
+- [ ] Deployment Static events-manager.devthomas.pl + events-manager.storybook.devthoms.pl + events-manager.test-coverage-fe.devthomas.pl + events-manager.test-coverage-be.devthomas.pl +  backend & frontend on Vercel, DB on CleverCloud at first
 - [ ] Deployment on Vercel (api, web, mobile)
 - [ ] CD for deployment
 - [ ] Deployment on AWS EC2
