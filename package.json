@@ -7,6 +7,7 @@
     "npm": ">=8.0.0"
   },
   "scripts": {
+    "nx": "nx",
     "start:api": "nx serve api",
     "start:prod": "node dist/apps/api/main.js",
     "heroku-postbuild": "npm i @nrwl/nx-linux-x64-gnu && nx build $PROJECT_NAME --prod"
