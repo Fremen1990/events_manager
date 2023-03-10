@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "apps/api", "use": "@nrwl/node:build" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "dist/apps/api/main.js" },
+    { "src": "/(.*)", "dest": "dist/apps/api" }
+  ]
+}
