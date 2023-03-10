@@ -30,16 +30,16 @@ jobs:
 
       - name: Format
 #        run: npm run format:check
-        run: npx nx affected --target=format:check --parallel=3
+        run: npx nx affected --target=format:check --parallel=3 --projects=web,api
 
       - name: Lint
-        run: npx nx affected --target=lint --parallel=3
+        run: npx nx affected --target=lint --parallel=3 --projects=web,api
 
       - name: Unit Tests
-        run: npx nx affected --target=test --parallel=3 --configuration=ci
+        run: npx nx affected --target=test --parallel=3 --configuration=ci --projects=web,api
 
       - name: E2E Tests
-        run: npx nx affected --target=e2e --parallel=3 --configuration=ci
+        run: npx nx affected --target=e2e --parallel=3 --configuration=ci --projects=web,api
 
       - name: Build
-        run: npx nx affected --target=build --parallel=3
+        run: npx nx affected --target=build --parallel=3 --projects=web,api
