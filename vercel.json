@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-    { "src": "apps/api", "use": "@nrwl/node:build" }
+    { "src": "apps/api", "use": "@vercel/node" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "dist/apps/api/main.js" },
