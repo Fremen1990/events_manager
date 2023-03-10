@@ -2,25 +2,15 @@
   "version": 2,
   "builds": [
     {
-      "src": "apps/api/**",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "apps/web/**",
-      "use": "@vercel/static-build"
+      "src": "dist/apps/api/main.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["dist/apps/api/**"] }
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "apps/api/$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "apps/web/$1"
+      "dest": "dist/apps/api/main.js"
     }
-  ],
-  "env": {
-    "API_BASE_URL": "/api"
-  }
+  ]
 }
