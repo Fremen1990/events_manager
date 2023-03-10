@@ -10,7 +10,8 @@
     "nx": "nx",
     "start:api": "nx serve api",
     "start:prod": "node dist/apps/api/main.js",
-    "heroku-postbuild": "npm i @nrwl/nx-linux-x64-gnu && nx build $PROJECT_NAME --prod"
+    "build:api": "npx nx build api",
+    "heroku-postbuild": "nx build $PROJECT_NAME --prod"
   },
   "private": true,
   "devDependencies": {
