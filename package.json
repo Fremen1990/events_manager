@@ -9,10 +9,11 @@
   "scripts": {
     "start:api": "nx serve api",
     "start:prod": "node dist/apps/api/main.js",
-    "build": "nx build api --prod"
+    "heroku-postbuild": "nx build $PROJECT_NAME --prod"
   },
   "private": true,
   "devDependencies": {
+    "@nrwl/nx-linux-x64-gnu": "^15.8.5",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@nrwl/cypress": "15.8.2",
