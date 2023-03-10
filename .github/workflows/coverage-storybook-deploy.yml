@@ -1,0 +1,59 @@
+name: Build and Publish Coverage Reports and Storybook
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install @nrwl/nx-linux-x64-gnu
+        run: npm install @nrwl/nx-linux-x64-gnu
+
+      - name: Build Storybook
+        run: npx nx build-storybook web
+
+      - name: Generate NestJS coverage
+        run: npx nx test api --configuration=ci
+
+      - name: Generate React coverage
+#        run: npx nx test web --configuration=ci
+        run: npx nx test web --coverage
+
+      - name: Create gh-pages-tools directory
+        run: mkdir -p gh-pages-tools
+
+      - name: Copy coverage folder to gh-pages-tools
+        run: cp -r coverage gh-pages-tools
+
+      - name: Copy storybook-static folder to gh-pages-tools
+        run: cp -r dist/storybook gh-pages-tools
+
+      - name: Generate index.html with menu and publish with coverage
+        run: |
+          echo '<html><body><ul><li><a href="./coverage/apps/api/lcov-report/index.html">NestJS Coverage</a></li><li><a href="./coverage/apps/web/index.html">React Coverage</a></li><li><a href="./storybook/web/index.html">Storybook</a></li></ul></body></html>' > gh-pages-tools/index.html
+      - name: Publish index.html
+        uses: peaceiris/actions-gh-pages@v3.9.2
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: gh-pages-tools
+          publish_branch: gh-pages
+#          cname: ${{ secrets.CNAME }}
+          force_orphan: true
+          keep_files: true

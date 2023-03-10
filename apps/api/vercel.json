@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/apps/api/main.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["dist/apps/api/**"] }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/apps/api/main.js"
+    }
+  ]
+}

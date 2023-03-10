@@ -6,14 +6,18 @@
   "targets": {
     "build": {
       "executor": "@nrwl/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "target": "node",
         "compiler": "tsc",
         "outputPath": "dist/apps/api",
         "main": "apps/api/src/main.ts",
         "tsConfig": "apps/api/tsconfig.app.json",
-        "assets": ["apps/api/src/assets"],
+        "assets": [
+          "apps/api/src/assets"
+        ],
         "isolatedConfig": true,
         "webpackConfig": "apps/api/webpack.config.js"
       },
@@ -38,14 +42,20 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["apps/api/**/*.ts"]
+        "lintFilePatterns": [
+          "apps/api/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/api/jest.config.ts",
         "passWithNoTests": true
@@ -53,7 +63,17 @@
       "configurations": {
         "ci": {
           "ci": true,
-          "codeCoverage": true
+          "watch": false,
+          "codeCoverage": true,
+          "coverageReporters": [
+            "json",
+            "lcov",
+            "text",
+            "clover"
+          ],
+          "coverageDirectory": "coverage/apps/api",
+          "reporters": ["jest-junit"],
+          "collectCoverage": true
         }
       }
     }

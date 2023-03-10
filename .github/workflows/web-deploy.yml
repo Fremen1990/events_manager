@@ -1,0 +1,41 @@
+name: Web Deploy
+on:
+  push:
+    branches:
+      - main
+      -
+
+#DISABLED
+#if: false
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [19.x]
+    runs-on: ubuntu-latest
+    name: Build and Push
+    steps:
+      - name: git-checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+
+      - name: Install all dependencies
+        run: npm ci
+
+      - name: Install @nrwl/nx-linux-x64-gnu
+        run: npm install @nrwl/nx-linux-x64-gnu
+
+      - name: Build
+        run: npx nx affected --target=build --parallel=3 --projects=web
+
+      - name: Push
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: FE_publish # The branch name where you want to push the assets
+          FOLDER: dist/apps/web # The directory where your assets are generated
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
+          MESSAGE: "Build: ({sha}) {msg}" # The commit message

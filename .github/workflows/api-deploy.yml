@@ -1,0 +1,65 @@
+name: API Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+#DISABLED
+#if: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      CI: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install @nrwl/nx-linux-x64-gnu
+        run: npm install @nrwl/nx-linux-x64-gnu
+
+        # Cache downloaded dependencies between builds
+        # (requires caching plugin for your CI/CD platform)
+        if: steps.cache-hit.outputs.hit != 'true'
+        id: cache-hit
+        continue-on-error: true
+
+
+      - name: Build
+        run: npm run build:api -- --prod
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: false
+          file: ./Dockerfile
+          build-args: |
+            NODE_VERSION=${{ secrets.NODE_VERSION }}
+            NODE_IMAGE=node:${{ secrets.NODE_VERSION }}-alpine
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.13
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: "events-manager-api-cd"
+          heroku_email: "fremen1990@gmail.com"
+          container_registry: "registry.heroku.com"
+          image_name: "events-manager-api-cd"
+          dockerfile_path: "./Dockerfile"
+          build_dir: "dist/apps/api"
