@@ -7,10 +7,9 @@
     "npm": ">=8.0.0"
   },
   "scripts": {
-    "nx": "nx",
+    "start": "node dist/apps/api/main.js",
     "start:api": "nx serve api",
-    "start:prod": "node dist/apps/api/main.js",
-    "build:api": "npx nx build api",
+    "build:api": "nx build api --prod",
     "heroku-postbuild": "nx build $PROJECT_NAME --prod"
   },
   "private": true,
