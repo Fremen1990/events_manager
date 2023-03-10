@@ -9,7 +9,7 @@
   "scripts": {
     "start:api": "nx serve api",
     "start:prod": "node dist/apps/api/main.js",
-    "build": "npx nx build api --prod"
+    "build": "nx build api --prod"
   },
   "private": true,
   "devDependencies": {
