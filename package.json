@@ -2,7 +2,15 @@
   "name": "events-manager",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "start:api": "nx serve api",
+    "start:prod": "node dist/apps/api/main.js"
+
+  },
   "private": true,
   "devDependencies": {
     "@nestjs/schematics": "^9.0.0",
@@ -19,8 +27,6 @@
     "@nrwl/vite": "15.8.5",
     "@nrwl/webpack": "15.8.5",
     "@nrwl/workspace": "15.8.2",
-    "@nrwl/nx-linux-x64-gnu": "15.8.2",
-    "@vercel/node": "^2.9.12",
     "@storybook/addon-essentials": "^7.0.0-beta.43",
     "@storybook/core-server": "^7.0.0-beta.43",
     "@storybook/react-vite": "^7.0.0-beta.43",
