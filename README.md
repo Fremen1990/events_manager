@@ -1,5 +1,3 @@
-
-
 ![img_1.png](server/assets/img_1.png)
 
 
@@ -35,5 +33,3 @@ Mobile:
 - [ ] React Native
 
 ------
-
-
