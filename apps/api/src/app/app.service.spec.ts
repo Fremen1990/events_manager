@@ -2,8 +2,7 @@ import { Test } from '@nestjs/testing';
 
 import { AppService } from './app.service';
 
-// todo Fail on CI
-describe.skip('AppService', () => {
+describe('AppService', () => {
   let service: AppService;
 
   beforeAll(async () => {
