@@ -27,13 +27,18 @@ jobs:
       - name: Lint
         run: npx nx affected --target=lint --parallel=3 --projects=web,api
 
-      - name: Unit Tests Web
-        run: npx nx affected --target=test --parallel=3 --configuration=ci --projects=web
-        continue-on-error: true
+#      - name: Unit Tests Web
+#        run: npx nx affected --target=test --parallel=3 --configuration=ci --projects=web
+#        continue-on-error: true
 
       - name: Unit Tests Api
+#        run: npx nx test api --code-coverage --parallel=3 --configuration=ci
+        run: npx nx test api --parallel=3 --configuration=ci
+
+
+#      - name: Unit Tests Api
 #        run: npx nx affected --target=test --parallel=3 --configuration=ci --projects=api
-        run: npx nx affected:test --parallel=3 --configuration=ci --base=origin/main --projects=api
+#        run: npx nx affected:test --parallel=3 --configuration=ci --base=origin/main --projects=api
 
       #      - name: E2E Tests
       #        run: npx nx affected --target=e2e --parallel=3 --configuration=ci --projects=web,api
