@@ -66,9 +66,16 @@
       },
       "configurations": {
         "ci": {
-          "ci": false,
-          "browsers": "ChromeHeadless",
-          "codeCoverage": true
+          "ci": true,
+          "codeCoverage": true,
+          "coverageReporters": [
+            "json",
+            "lcov",
+            "text",
+            "clover"
+          ],
+          "coverageDirectory": "coverage/apps/api",
+          "collectCoverage": true
         }
       }
     },

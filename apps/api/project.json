@@ -62,7 +62,7 @@
       },
       "configurations": {
         "ci": {
-          "ci": false,
+          "ci": true,
           "watch": false,
           "codeCoverage": true,
           "coverageReporters": [
