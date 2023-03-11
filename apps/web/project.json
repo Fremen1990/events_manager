@@ -76,6 +76,7 @@
       },
       "configurations": {
         "ci": {
+          "ci": true,
           "quiet": true
         }
       }
