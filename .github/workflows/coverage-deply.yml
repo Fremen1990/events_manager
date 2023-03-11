@@ -48,6 +48,7 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GH_TOKEN }}
+          flag-name: coveralls-repo-token
           parallel: true
           path-to-lcov: coverage/apps/api/lcov.info
 
@@ -59,4 +60,5 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GH_TOKEN }}
+          flag-name: coveralls-repo-token
           parallel-finished: true
