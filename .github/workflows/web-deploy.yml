@@ -1,0 +1,38 @@
+name: Generate a build and push to FE_publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [18.x, 19.x]
+    runs-on: ubuntu-latest
+    name: Build and Push
+    steps:
+      - name: git-checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+
+      - name: Install all dependencies
+        run: npm ci
+
+      - name: Install @nrwl/nx-linux-x64-gnu
+        run: npm install @nrwl/nx-linux-x64-gnu
+
+      - name: Build
+        run: npx nx affected --target=build --parallel=3 --projects=web,api
+
+      - name: Push
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: FE_publish # The branch name where you want to push the assets
+          FOLDER: build # The directory where your assets are generated
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
+          MESSAGE: "Build: ({sha}) {msg}" # The commit message
