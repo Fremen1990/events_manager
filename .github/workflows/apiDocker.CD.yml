@@ -27,14 +27,15 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Install @nrwl/nx-linux-x64-gnu
+        run: npm install @nrwl/nx-linux-x64-gnu
+
         # Cache downloaded dependencies between builds
         # (requires caching plugin for your CI/CD platform)
         if: steps.cache-hit.outputs.hit != 'true'
         id: cache-hit
         continue-on-error: true
 
-      - name: Install @nrwl/nx-linux-x64-gnu
-        run: npm install @nrwl/nx-linux-x64-gnu
 
       - name: Build
         run: npm run build:api -- --prod
