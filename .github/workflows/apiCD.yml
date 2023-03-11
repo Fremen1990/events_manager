@@ -33,8 +33,8 @@ jobs:
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "events-manager-api-cd"
-          heroku_email: "your-heroku-email"
-          build_dir: "fremen1990@gmail.com"
+          heroku_email: "fremen1990@gmail.com"
+          build_dir: dist/apps/api
 
   download:
     runs-on: ubuntu-latest
