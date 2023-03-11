@@ -8,9 +8,9 @@
   },
   "scripts": {
     "start": "node dist/apps/api/main.js",
+    "start:prod": "nx run api:serve:production",
     "start:api": "nx serve api",
-    "build:api": "nx build api --prod",
-    "heroku-postbuild": "nx build $PROJECT_NAME --prod"
+    "build:api": "nx build api"
   },
   "private": true,
   "devDependencies": {
