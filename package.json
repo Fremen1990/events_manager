@@ -8,7 +8,6 @@
   },
   "scripts": {
     "start": "nx serve api",
-    "start:prod": "node main.js",
     "start:api": "nx serve api",
     "build:api": "nx build api"
   },
