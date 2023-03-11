@@ -42,7 +42,7 @@ jobs:
         with:
           github-token: ${{ secrets.GH_TOKEN }}
           parallel: true
-          coverage-lcov: coverage/apps/api/lcov.info
+          path-to-lcov: coverage/apps/api/lcov.info
 
   finish:
     needs: test
