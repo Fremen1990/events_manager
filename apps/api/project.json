@@ -63,6 +63,7 @@
       "configurations": {
         "ci": {
           "ci": false,
+          "watch": false,
           "codeCoverage": true,
           "coverageReporters": [
             "json",
