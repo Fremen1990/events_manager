@@ -50,6 +50,13 @@
 
 ------
 
+### App URL
+
+- FrontEnd: https://events-manager.devthomas.pl
+- Backend: https://events-manager-api-cd.herokuapp.com/api
+- Storybook: https://fremen1990.github.io/events_manager
+- Test Coverage: 
+
 ### Heroku deployment CI/CD
 
 Heroku debugging:
