@@ -66,7 +66,7 @@
       },
       "configurations": {
         "ci": {
-          "ci": true,
+          "ci": false,
           "browsers": "ChromeHeadless",
           "codeCoverage": true
         }
