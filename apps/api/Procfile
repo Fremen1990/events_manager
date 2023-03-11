@@ -1,1 +1,2 @@
-web: npm run start
+web: node dist/apps/api/main.js
+web: node app/dist/apps/api/main.js
