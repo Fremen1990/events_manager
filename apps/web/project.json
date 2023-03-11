@@ -6,7 +6,9 @@
   "targets": {
     "build": {
       "executor": "@nrwl/vite:build",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/web"
@@ -55,17 +57,30 @@
     },
     "test": {
       "executor": "@nrwl/vite:test",
-      "outputs": ["coverage/apps/web"],
+      "outputs": [
+        "coverage/apps/web"
+      ],
       "options": {
         "passWithNoTests": true,
         "reportsDirectory": "../../coverage/apps/web"
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "browsers": "ChromeHeadless",
+          "codeCoverage": true
+        }
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["apps/web/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": [
+          "apps/web/**/*.{ts,tsx,js,jsx}"
+        ]
       }
     },
     "storybook": {
@@ -76,14 +91,16 @@
       },
       "configurations": {
         "ci": {
-          "ci": false,
+          "ci": true,
           "quiet": true
         }
       }
     },
     "build-storybook": {
       "executor": "@nrwl/storybook:build",
-      "outputs": ["{options.outputDir}"],
+      "outputs": [
+        "{options.outputDir}"
+      ],
       "options": {
         "outputDir": "dist/storybook/web",
         "configDir": "apps/web/.storybook"
