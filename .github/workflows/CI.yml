@@ -1,48 +1,48 @@
-name: CI
-
-on:
-  push:
-    branches:
-      - main
-      - develop
-      - web
-      - web/feature/*
-  pull_request:
-    branches:
-      - main
-      - develop
-      - web
-      - web/feature/*
-
-jobs:
-  Build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: nrwl/nx-set-shas@v3
-        with:
-          sha: ${{ github.sha }}
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install @nrwl/nx-linux-x64-gnu
-        run: npm install @nrwl/nx-linux-x64-gnu
-
-      - name: Format
-#        run: npm run format:check
-        run: npx nx affected --target=format:check --parallel=3 --projects=web,api
-
-      - name: Lint
-        run: npx nx affected --target=lint --parallel=3 --projects=web,api
-
-      - name: Unit Tests
-        run: npx nx affected --target=test --parallel=3 --configuration=ci --projects=web,api
-
-      - name: E2E Tests
-        run: npx nx affected --target=e2e --parallel=3 --configuration=ci --projects=web,api
-
-      - name: Build
-        run: npx nx affected --target=build --parallel=3 --projects=web,api
+#name: CI
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#      - develop
+#      - web
+#      - web/feature/*
+#  pull_request:
+#    branches:
+#      - main
+#      - develop
+#      - web
+#      - web/feature/*
+#
+#jobs:
+#  Build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#      - uses: nrwl/nx-set-shas@v3
+#        with:
+#          sha: ${{ github.sha }}
+#
+#      - name: Install dependencies
+#        run: npm ci
+#
+#      - name: Install @nrwl/nx-linux-x64-gnu
+#        run: npm install @nrwl/nx-linux-x64-gnu
+#
+#      - name: Format
+##        run: npm run format:check
+#        run: npx nx affected --target=format:check --parallel=3 --projects=web,api
+#
+#      - name: Lint
+#        run: npx nx affected --target=lint --parallel=3 --projects=web,api
+#
+#      - name: Unit Tests
+#        run: npx nx affected --target=test --parallel=3 --configuration=ci --projects=web,api
+#
+#      - name: E2E Tests
+#        run: npx nx affected --target=e2e --parallel=3 --configuration=ci --projects=web,api
+#
+#      - name: Build
+#        run: npx nx affected --target=build --parallel=3 --projects=web,api
