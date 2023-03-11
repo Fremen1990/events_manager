@@ -10,7 +10,7 @@
     "start": "node /home/runner/work/events_manager/events_manager/dist/apps/api/main.js",
     "start:api": "nx serve api",
     "build:api": "nx build api",
-    "heroku-postbuild": "cd dist/apps/api && npm install && npm run build"
+    "heroku-postbuild": "nx build api --prod",
   },
   "private": true,
   "devDependencies": {
