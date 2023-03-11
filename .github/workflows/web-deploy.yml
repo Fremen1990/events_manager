@@ -1,5 +1,4 @@
-name: Generate a build and push to FE_publish
-
+name: Web Deploy
 on:
   push:
     branches:
