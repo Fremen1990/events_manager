@@ -9,16 +9,20 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    # Enable caching for node_modules
     env:
       CI: true
-    cache:
-      directories:
-        - node_modules
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install Dependencies
         run: npm ci
