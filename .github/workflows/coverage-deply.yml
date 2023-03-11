@@ -31,8 +31,8 @@ jobs:
         run: npx nx affected --target=test --parallel=3 --projects=web
         continue-on-error: true
 
-#            - name: Unit Tests Api
-#              run: npx nx affected --target=test --parallel=3 --projects=api
+      - name: Unit Tests Api
+        run: npx nx affected --target=test --parallel=3 --projects=api
 
       #      - name: E2E Tests
       #        run: npx nx affected --target=e2e --parallel=3 --configuration=ci --projects=web,api
