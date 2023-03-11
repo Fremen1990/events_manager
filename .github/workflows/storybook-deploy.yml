@@ -24,4 +24,5 @@ jobs:
           github_token: ${{ secrets.GH_TOKEN }}
           publish_dir: ./dist/storybook
           publish_branch: gh-pages
-
+#          cname: my-custom-domain.com
+#          base_url: https://my-custom-domain.com/my-app

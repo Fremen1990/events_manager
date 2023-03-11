@@ -62,7 +62,7 @@
       },
       "configurations": {
         "ci": {
-          "ci": true,
+          "ci": false,
           "codeCoverage": true,
           "coverageReporters": [
             "json",
