@@ -16,13 +16,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-#      - name: Cache node_modules
-#        uses: actions/cache@v2
-#        with:
-#          path: ~/.npm
-#          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-#          restore-keys: |
-#            ${{ runner.os }}-node-
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install Dependencies
         run: npm ci
@@ -32,9 +32,9 @@ jobs:
 
         # Cache downloaded dependencies between builds
         # (requires caching plugin for your CI/CD platform)
-#        if: steps.cache-hit.outputs.hit != 'true'
-#        id: cache-hit
-#        continue-on-error: true
+        if: steps.cache-hit.outputs.hit != 'true'
+        id: cache-hit
+        continue-on-error: true
 
 
       - name: Build
