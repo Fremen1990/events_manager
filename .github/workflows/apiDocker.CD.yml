@@ -63,8 +63,7 @@ jobs:
           file: ./Dockerfile.prod
           platforms: linux/amd64
           tags: |
-            registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}web
-            registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}worker
+            registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}
           build-args: |
             NODE_IMAGE=node:${{ secrets.NODE_VERSION }}-alpine
             APP_DIR=/app
