@@ -10,9 +10,6 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install --production
 
-# Build the application
-RUN npm run build:api && pwd
-
 # Copy built application
 COPY dist/apps/api/ ./
 
