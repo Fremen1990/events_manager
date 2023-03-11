@@ -47,7 +47,7 @@ jobs:
       - name: Coveralls
         uses: coverallsapp/github-action@v2
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
+          github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
           flag-name: coveralls-repo-token
           parallel: true
           path-to-lcov: coverage/apps/api/lcov.info
@@ -59,6 +59,6 @@ jobs:
       - name: Coveralls Finished
         uses: coverallsapp/github-action@v2
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
+          github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
           flag-name: coveralls-repo-token
           parallel-finished: true
