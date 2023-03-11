@@ -36,11 +36,6 @@ jobs:
       - name: Install @nrwl/nx-linux-x64-gnu
         run: npm install @nrwl/nx-linux-x64-gnu
 
-      - name: Print Current Directory
-        run: |
-          pwd # print current working directory
-          ls # print contents of the root directory
-
       - name: Build
         run: npm run build:api -- --prod
 
@@ -53,20 +48,6 @@ jobs:
           build-args: |
             NODE_VERSION=${{ secrets.NODE_VERSION }}
             NODE_IMAGE=node:${{ secrets.NODE_VERSION }}-alpine
-
-      # Use a multi-stage Docker build to reduce image size
-      - name: Build production image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          file: ./Dockerfile.prod
-          platforms: linux/amd64
-          tags: |
-            registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}
-          build-args: |
-            NODE_IMAGE=node:${{ secrets.NODE_VERSION }}-alpine
-            APP_DIR=/app
 
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.13
