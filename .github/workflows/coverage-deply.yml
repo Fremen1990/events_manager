@@ -44,7 +44,7 @@ jobs:
       #        run: npx nx affected --target=e2e --parallel=3 --configuration=ci --projects=web,api
 
       - name: Coveralls
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@main
         with:
           github-token: ${{ secrets.GH_TOKEN }}
           parallel: true
