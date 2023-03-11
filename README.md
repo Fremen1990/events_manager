@@ -5,31 +5,57 @@
 
 ### Ideas to realize for V2
 
-DevOps:
+### DevOps:
+
 - [ ] NX monorepo
 - [ ] CI for tests
-- [ ] Deployment
+- [ ] Deployment:
+-  events-manager.devthomas.pl/api - BackEnd
+-  events-manager.devthomas.pl - FrontEnd
+-  events-manager.storybook.devthoms.pl - Storybook 
+-  events-manager.test-coverage-fe.devthomas.pl - Test Coverage FrontEnd
+-  events-manager.test-coverage-be.devthomas.pl - Test Covarage  BackEnd 
+- DB on CleverCloud at first // or Heroku
 - [ ] CD for deployment
+- [ ] Deployment on AWS EC2
+- [ ] CD for AWS deployment
 
-Backend:
+### Backend:
+
 - [ ] Backend NestJS + TypeORM + GraphQL
 - [ ] Backend Login + QR code
 - [ ] Testing with SuperTests 100% coverage
+- [ ] Prepare Swagger
+- [ ] Publish
 - [ ] Testing in Postman
 - [ ] Morpheus + Grafana monitoring on Docker container
 
-Frontend:
+ ###  Frontend:
+
 - [ ] MSW
 - [ ] Cypress
 - [ ] Login
-- [ ] Storybook
+- [ ] Storybook with addons
+- [ ] Publish static storybook on events-manager.storybook.devthomas.pl
 - [ ] MaterialUI DataGrid
 - [ ] Dark Mode MUI
 - [ ] Mobile responsive
 - [ ] Toasts
 - [ ] Map Location
 
-Mobile:
+ ### Mobile:
+
 - [ ] React Native
+- [ ] Mobile tests in Detox
 
 ------
+
+### Heroku deployment CI/CD
+
+Heroku debugging:
+```ts
+heroku login
+heroku run bash -a APPNAME
+$ cd app
+exit
+```
