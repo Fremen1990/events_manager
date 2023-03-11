@@ -36,6 +36,11 @@ jobs:
       - name: Install @nrwl/nx-linux-x64-gnu
         run: npm install @nrwl/nx-linux-x64-gnu
 
+      - name: Print Current Directory
+        run: |
+          pwd # print current working directory
+          ls # print contents of the root directory
+
       - name: Build
         run: npm run build:api -- --prod
 
