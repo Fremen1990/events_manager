@@ -61,10 +61,19 @@ jobs:
 #          keep_files: true
 #          publish_dir_prefix: "coverage-web"
 #
-#      # Generate index.html with menu
+
+      - name: Create gh-pages-tools directory
+        run: mkdir -p gh-pages-tools
+
+      - name: Copy coverage folder to gh-pages-tools
+        run: cp -r coverage gh-pages-tools
+
+      - name: Copy storybook-static folder to gh-pages-tools
+        run: cp -r dist/storybook gh-pages-tools
+
       - name: Generate index.html with menu and publish with coverage
         run: |
-          echo '<html><body><ul><li><a href="./coverage/apps/api/lcov-report/index.html">NestJS Coverage</a></li><li><a href="./coverage/apps/web/index.html">React Coverage</a></li><li><a href="./storybook-static/index.html">Storybook</a></li></ul></body></html>' > coverage/index.html
+          echo '<html><body><ul><li><a href="./coverage/apps/api/lcov-report/index.html">NestJS Coverage</a></li><li><a href="./coverage/apps/web/index.html">React Coverage</a></li><li><a href="./storybook/web/index.html">Storybook</a></li></ul></body></html>' > coverage/index.html
       - name: Publish index.html
         uses: peaceiris/actions-gh-pages@v3.9.2
         with:
