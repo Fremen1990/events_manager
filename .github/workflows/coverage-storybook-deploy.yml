@@ -20,14 +20,14 @@ jobs:
       - name: Install @nrwl/nx-linux-x64-gnu
         run: npm install @nrwl/nx-linux-x64-gnu
 
-        # Clean gh-pages branch
-      - name: Clean gh-pages branch
-        uses: peaceiris/actions-gh-pages@v3.6.0
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          clean: true
-          publish_branch: gh-pages
-          force_orphan: true
+#        # Clean gh-pages branch
+#      - name: Clean gh-pages branch
+#        uses: peaceiris/actions-gh-pages@v3.6.0
+#        with:
+#          github_token: ${{ secrets.GH_TOKEN }}
+#          clean: true
+#          publish_branch: gh-pages
+#          force_orphan: true
 
 #      # Build and publish Storybook
       - name: Build Storybook
@@ -36,6 +36,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3.6.0
         with:
           github_token: ${{ secrets.GH_TOKEN }}
+          clean: true
           publish_dir: dist/storybook/web
           publish_dir_prefix: "/storybook"
           keep_files: true
