@@ -16,6 +16,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+        # Install @nrwl/nx-linux-x64-gnu
+      - name: Install @nrwl/nx-linux-x64-gnu
+        run: npm install @nrwl/nx-linux-x64-gnu
+
       # Build and publish Storybook
       - name: Build Storybook
         run: npx nx affected --target=storybook-build --parallel --max-parallel=4 --exclude=node_modules --exclude=dist
