@@ -4,8 +4,9 @@ on:
     branches:
       - main
       -
+
 #DISABLED
-if: false
+#if: false
 
 jobs:
   build:

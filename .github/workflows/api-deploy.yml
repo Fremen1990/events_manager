@@ -6,8 +6,7 @@ on:
       - main
 
 #DISABLED
-if: false
-
+#if: false
 
 jobs:
   build-and-deploy:

@@ -13,9 +13,10 @@ on:
       - develop
       - web
       - web/feature/*
-      -
+
+
 #DISABLED
-if: false
+#if: false
 
 jobs:
   Build:
