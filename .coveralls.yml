@@ -1,4 +1,0 @@
-service_name: github
-repo_token: ${{ env.COVERALLS_REPO_TOKEN }}
-coverage_file: ./coverage/apps/api/lcov.info
-flag_name: coveralls-repo-token

@@ -18,7 +18,8 @@ export function App() {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch('http://localhost:3333/api');
+      const response = await fetch('http://localhost:3333/api').then(res => res.json()
+      ).catch(err => console.log(err));
       console.log("API DEV", response);
     })()
     // getApi()
