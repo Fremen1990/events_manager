@@ -33,12 +33,13 @@ jobs:
       - name: Build Storybook
         run: npx nx build-storybook web
       - name: Publish Storybook
-        uses: peaceiris/actions-gh-pages@v3.6.0
+        uses: peaceiris/actions-gh-pages@v3.9.2
         with:
           github_token: ${{ secrets.GH_TOKEN }}
           clean: true
           publish_dir: dist/storybook/web
-          publish_dir_prefix: "/storybook"
+#          publish_dir_prefix: "/storybook"
+          path_prefix: /storybook
           keep_files: true
           publish_branch: gh-pages
           force_orphan: true
