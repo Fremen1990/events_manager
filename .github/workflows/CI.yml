@@ -13,6 +13,9 @@ on:
       - develop
       - web
       - web/feature/*
+      -
+#DISABLED
+if: false
 
 jobs:
   Build:

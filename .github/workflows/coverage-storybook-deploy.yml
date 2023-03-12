@@ -28,49 +28,55 @@ jobs:
           clean: true
           publish_branch: gh-pages
 
-      # Build and publish Storybook
-      - name: Build Storybook
-        run: npx nx build-storybook web
-      - name: Publish Storybook
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: dist/storybook/web
-          publish_branch: gh-pages
-
-      # Generate test coverage for NestJS
-      - name: Generate NestJS coverage
-        run: npx nx test api --configuration=ci
-      - name: Publish NestJS coverage
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: coverage/apps/api
-          publish_branch: gh-pages
-#          cname: ${{ secrets.CNAME }}
-          force_orphan: true
-
-      # Generate test coverage for React
-      - name: Generate React coverage
-        run: npx nx test web --configuration=ci
-      - name: Publish React coverage
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: coverage/apps/web
-          publish_branch: gh-pages
-#          cname: ${{ secrets.CNAME }}
-          force_orphan: true
-
-      # Generate index.html with menu
-      - name: Generate index.html with menu
-        run: |
-          echo '<html><body><ul><li><a href="./coverage/apps/api/index.html">NestJS Coverage</a></li><li><a href="./coverage/apps/web/index.html">React Coverage</a></li><li><a href="./storybook-static/index.html">Storybook</a></li></ul></body></html>' > index.html
-      - name: Publish index.html
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: ./
-          publish_branch: gh-pages
-#          cname: ${{ secrets.CNAME }}
-          force_orphan: true
+#      # Build and publish Storybook
+#      - name: Build Storybook
+#        run: npx nx build-storybook web
+#      - name: Publish Storybook
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GH_TOKEN }}
+#          publish_dir: dist/storybook/web
+#          publish_branch: gh-pages
+#          keep_files: true
+#
+#
+#      # Generate test coverage for NestJS
+#      - name: Generate NestJS coverage
+#        run: npx nx test api --configuration=ci
+#      - name: Publish NestJS coverage
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GH_TOKEN }}
+#          publish_dir: coverage/apps/api
+#          publish_branch: gh-pages
+##          cname: ${{ secrets.CNAME }}
+#          force_orphan: true
+#          keep_files: true
+#
+#
+#      # Generate test coverage for React
+#      - name: Generate React coverage
+#        run: npx nx test web --configuration=ci
+#      - name: Publish React coverage
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GH_TOKEN }}
+#          publish_dir: coverage/apps/web
+#          publish_branch: gh-pages
+##          cname: ${{ secrets.CNAME }}
+#          force_orphan: true
+#          keep_files: true
+#
+#      # Generate index.html with menu
+#      - name: Generate index.html with menu
+#        run: |
+#          echo '<html><body><ul><li><a href="./coverage/apps/api/index.html">NestJS Coverage</a></li><li><a href="./coverage/apps/web/index.html">React Coverage</a></li><li><a href="./storybook-static/index.html">Storybook</a></li></ul></body></html>' > index.html
+#      - name: Publish index.html
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GH_TOKEN }}
+#          publish_dir: ./
+#          publish_branch: gh-pages
+##          cname: ${{ secrets.CNAME }}
+#          force_orphan: true
+#          keep_files: true
