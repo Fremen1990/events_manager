@@ -18,23 +18,8 @@ jobs:
       - name: Install @nrwl/nx-linux-x64-gnu
         run: npm install @nrwl/nx-linux-x64-gnu
 
-      - name: Build Storybook
-        run: npx nx build-storybook web
-
-      - name: Move Storybook to gh-pages branch to storybook directory
-        run: |
-          mkdir -p storybook
-          git clone --branch gh-pages --single-branch HTTPS://github.com/${{ github.repository }} storybook
-          rm -rf storybook/*
-          cp -r dist/storybook/web/* storybook
-          cd storybook
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git add .
-          git commit -m "Deploy Storybook"
-          git push -f origin gh-pages
-
-
+#      - name: Build Storybook
+#        run: npx nx build-storybook web
 #      - name: Publish Storybook
 #        uses: peaceiris/actions-gh-pages@v3.9.2
 #        with:
@@ -48,8 +33,8 @@ jobs:
 #          force_orphan: true
 
 ##      # Generate test coverage for NestJS
-#      - name: Generate NestJS coverage
-#        run: npx nx test api --configuration=ci
+      - name: Generate NestJS coverage
+        run: npx nx test api --configuration=ci
 #      - name: Publish NestJS coverage
 #        uses: peaceiris/actions-gh-pages@v3
 #        with:
@@ -62,8 +47,9 @@ jobs:
 #          publish_dir_prefix: "coverage-api"
 #
 #      # Generate test coverage for React
-#      - name: Generate React coverage
+      - name: Generate React coverage
 #        run: npx nx test web --configuration=ci
+        run: npx nx test web --coverage
 #      - name: Publish React coverage
 #        uses: peaceiris/actions-gh-pages@v3
 #        with:
@@ -76,15 +62,15 @@ jobs:
 #          publish_dir_prefix: "coverage-web"
 #
 #      # Generate index.html with menu
-#      - name: Generate index.html with menu
-#        run: |
-#          echo '<html><body><ul><li><a href="./coverage/apps/api/index.html">NestJS Coverage</a></li><li><a href="./coverage/apps/web/index.html">React Coverage</a></li><li><a href="./storybook-static/index.html">Storybook</a></li></ul></body></html>' > index.html
-#      - name: Publish index.html
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GH_TOKEN }}
-#          publish_dir: ./
-#          publish_branch: gh-pages
-##          cname: ${{ secrets.CNAME }}
-#          force_orphan: true
-#          keep_files: true
+      - name: Generate index.html with menu and publish with coverage
+        run: |
+          echo '<html><body><ul><li><a href="./coverage/apps/api/lcov-report/index.html">NestJS Coverage</a></li><li><a href="./coverage/apps/web/index.html">React Coverage</a></li><li><a href="./storybook-static/index.html">Storybook</a></li></ul></body></html>' > coverage/index.html
+      - name: Publish index.html
+        uses: peaceiris/actions-gh-pages@v3.9.2
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: coverage
+          publish_branch: gh-pages
+#          cname: ${{ secrets.CNAME }}
+          force_orphan: true
+          keep_files: true
