@@ -24,7 +24,7 @@ jobs:
       - name: Move Storybook to gh-pages branch to storybook directory
         run: |
           mkdir -p storybook
-          git clone --branch gh-pages --single-branch git://github.com/${{ github.repository }} storybook
+          git clone --branch gh-pages --single-branch HTTPS://github.com/${{ github.repository }} storybook
           rm -rf storybook/*
           cp -r dist/storybook/web/* storybook
           cd storybook
