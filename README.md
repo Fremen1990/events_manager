@@ -7,16 +7,17 @@
 
 ### DevOps:
 
-- [ ] NX monorepo
-- [ ] CI for tests
-- [ ] Deployment:
--  events-manager.devthomas.pl/api - BackEnd
--  events-manager.devthomas.pl - FrontEnd
--  events-manager.storybook.devthoms.pl - Storybook 
--  events-manager.test-coverage-fe.devthomas.pl - Test Coverage FrontEnd
--  events-manager.test-coverage-be.devthomas.pl - Test Covarage  BackEnd 
-- DB on CleverCloud at first // or Heroku
-- [ ] CD for deployment
+- [x] NX monorepo
+- [x] CI for tests
+- [x] Deployment:
+   - BackEnd - Heroku
+   - FrontEnd - Hostinger
+   - Storybook - Github Pages
+   - Test Coverage FE - Github Pages
+   - Test Coverage BE - Github Pages
+- [x] CD for deployment
+- [ ] DB MySQL on ClearDB Heroku
+  https://devcenter.heroku.com/articles/cleardb
 - [ ] Deployment on AWS EC2
 - [ ] CD for AWS deployment
 
@@ -47,6 +48,25 @@
 
 - [ ] React Native
 - [ ] Mobile tests in Detox
+
+### Additional features ideas:
+
+- [ ] AUthentication and authorization, 2FA, QR code, JWT
+  https://www.udemy.com/course/react-nest-authentication/?src=sac&kw=nestjs+au
+- [ ] GraphQL Playground
+- [ ] GraphQL Pagination
+- [ ] Search in GraphQL
+- [ ] Realtime updates with GraphQL Subscriptions
+- [ ] File upload with GraphQL
+- [ ] Dockerize the app
+- [ ] AWS
+- [ ] Morpheus + Grafana monitoring on Docker container
+- [ ] React Native
+- [ ] MSW
+- [ ] Detox
+- [ ] Postman
+- [ ] Chat with SocketIO (possible with GraphQL Subscriptions as well)
+
 
 ------
 
