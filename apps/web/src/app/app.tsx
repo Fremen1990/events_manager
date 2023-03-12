@@ -28,7 +28,7 @@ export function App() {
       <NxWelcome title="web"/>
       <div/>
 
-      <button onClick={() => getApiProd()}></button>
+      <button style={{fontSize:30, position:"fixed", top:0, left:"50%"}} onClick={() => getApiProd()}>GET API CALL!! </button>
 
       {/* START: routes */}
       {/* These routes and navigation have been generated for you */}
