@@ -1,20 +1,40 @@
 import NxWelcome from './nx-welcome';
 
-import { Route, Routes, Link } from 'react-router-dom';
+import {Route, Routes, Link} from 'react-router-dom';
+import {useEffect} from "react";
 
 export function App() {
+
+
+  const getApiDev = async () => {
+    const response = await fetch('http://localhost:3333/api');
+    console.log("API DEV", response);
+  }
+
+  const getApiProd = async () => {
+    const response = await fetch('https://events-manager-api-cd.herokuapp.com/api');
+    console.log("API PROD", response);
+  }
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetch('http://localhost:3333/api');
+      console.log("API DEV", response);
+    })()
+    // getApi()
+  }, [])
+
   return (
     <>
-      <NxWelcome title="web" />
-
-      <div />
+      <NxWelcome title="web"/>
+      <div/>
 
       {/* START: routes */}
       {/* These routes and navigation have been generated for you */}
       {/* Feel free to move and update them to fit your needs */}
-      <br />
-      <hr />
-      <br />
+      <br/>
+      <hr/>
+      <br/>
       <div role="navigation">
         <ul>
           <li>
