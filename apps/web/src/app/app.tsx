@@ -16,19 +16,19 @@ export function App() {
     console.log("API PROD", response);
   }
 
-  useEffect(() => {
-    (async () => {
-      const response = await fetch('http://localhost:3333/api').then(res => res.json()
-      ).catch(err => console.log(err));
-      console.log("API DEV", response);
-    })()
-    // getApi()
-  }, [])
+  // useEffect(() => {
+  //   (async () => {
+  //     await fetch('http://localhost:3333/api').then(res => res.json()
+  //     ).catch(err => console.log(err));
+  //   })()
+  // }, [])
 
   return (
     <>
       <NxWelcome title="web"/>
       <div/>
+
+      <button onClick={() => getApiProd()}></button>
 
       {/* START: routes */}
       {/* These routes and navigation have been generated for you */}
