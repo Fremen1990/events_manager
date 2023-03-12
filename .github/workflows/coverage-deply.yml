@@ -22,12 +22,12 @@ jobs:
 
       # Build and publish Storybook
       - name: Build Storybook
-        run: npx nx affected --target=storybook-build --parallel --max-parallel=4 --exclude=node_modules --exclude=dist
+        run: npx nx affected --target=build-storybook --parallel --max-parallel=4 --exclude=node_modules --exclude=dist
       - name: Publish Storybook
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: ./storybook-static
+          publish_dir: ./dist/storybook/web
           publish_branch: gh-pages
 
       # Generate test coverage for NestJS
