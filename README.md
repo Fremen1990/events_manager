@@ -54,8 +54,10 @@
 
 - FrontEnd: https://events-manager.devthomas.pl
 - Backend: https://events-manager-api-cd.herokuapp.com/api
-- Storybook: https://fremen1990.github.io/events_manager
-- Test Coverage: 
+
+Storybook and Test Coverage are available on:
+https://fremen1990.github.io/events_manager
+
 
 ### Heroku deployment CI/CD
 
