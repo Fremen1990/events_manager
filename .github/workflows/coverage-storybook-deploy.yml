@@ -12,37 +12,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Install dependencies
       - name: Install dependencies
         run: npm ci
 
-        # Install @nrwl/nx-linux-x64-gnu
       - name: Install @nrwl/nx-linux-x64-gnu
         run: npm install @nrwl/nx-linux-x64-gnu
 
-#        # Clean gh-pages branch
-#      - name: Clean gh-pages branch
-#        uses: peaceiris/actions-gh-pages@v3.6.0
+      - name: Build Storybook
+        run: npx nx build-storybook web
+
+      - name: Move Storybook to gh-pages branch to storybook directory
+        run: |
+          mkdir -p storybook
+          git clone --branch gh-pages --single-branch git://github.com/${{ github.repository }} storybook
+          rm -rf storybook/*
+          cp -r dist/storybook/web/* storybook
+          cd storybook
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add .
+          git commit -m "Deploy Storybook"
+          git push -f origin gh-pages
+
+
+#      - name: Publish Storybook
+#        uses: peaceiris/actions-gh-pages@v3.9.2
 #        with:
 #          github_token: ${{ secrets.GH_TOKEN }}
 #          clean: true
+#          publish_dir: dist/storybook/web
+##          publish_dir_prefix: "/storybook"
+#          path_prefix: /storybook
+#          keep_files: true
 #          publish_branch: gh-pages
 #          force_orphan: true
-
-#      # Build and publish Storybook
-      - name: Build Storybook
-        run: npx nx build-storybook web
-      - name: Publish Storybook
-        uses: peaceiris/actions-gh-pages@v3.9.2
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          clean: true
-          publish_dir: dist/storybook/web
-#          publish_dir_prefix: "/storybook"
-          path_prefix: /storybook
-          keep_files: true
-          publish_branch: gh-pages
-          force_orphan: true
 
 ##      # Generate test coverage for NestJS
 #      - name: Generate NestJS coverage
