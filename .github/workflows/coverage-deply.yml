@@ -1,67 +1,64 @@
-name: Tests Coverage Deploy
-on: [push, pull_request]
-env:
-  CI: true
-  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+name: Build and Publish Coverage Reports and Storybook
+
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  test:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: nrwl/nx-set-shas@v3
-        with:
-          sha: ${{ github.sha }}
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Echo COVERALLS_REPO_TOKEN
-        run: echo ${{ secrets.COVERALLS_REPO_TOKEN }}
-
+      # Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      - name: Install @nrwl/nx-linux-x64-gnu
-        run: npm install @nrwl/nx-linux-x64-gnu
-
-      - name: Format
-        #        run: npm run format:check
-        run: npx nx affected --target=format:check --parallel=3 --projects=web,api
-
-      - name: Lint
-        run: npx nx affected --target=lint --parallel=3 --projects=web,api
-
-#      - name: Unit Tests Web
-#        run: npx nx affected --target=test --parallel=3 --configuration=ci --projects=web
-#        continue-on-error: true
-
-      - name: Unit Tests Api
-#        run: npx nx test api --code-coverage --parallel=3 --configuration=ci
-        run: npx nx test api --parallel=3 --configuration=ci
-
-
-#      - name: Unit Tests Api
-#        run: npx nx affected --target=test --parallel=3 --configuration=ci --projects=api
-#        run: npx nx affected:test --parallel=3 --configuration=ci --base=origin/main --projects=api
-
-      #      - name: E2E Tests
-      #        run: npx nx affected --target=e2e --parallel=3 --configuration=ci --projects=web,api
-
-      - name: Coveralls
-        uses: coverallsapp/github-action@v2
+      # Build and publish Storybook
+      - name: Build Storybook
+        run: npx nx affected --target=storybook-build --parallel --max-parallel=4 --exclude=node_modules --exclude=dist
+      - name: Publish Storybook
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
-          flag-name: coveralls-repo-token
-          parallel: true
-          path-to-lcov: coverage/apps/api/lcov.info
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./storybook-static
+          publish_branch: gh-pages
 
-  finish:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls Finished
-        uses: coverallsapp/github-action@v2
+      # Generate test coverage for NestJS
+      - name: Generate NestJS coverage
+        run: npx nx affected --target=test --parallel --max-parallel=4 --exclude=node_modules --exclude=dist --projects=api -- --coverage
+      - name: Publish NestJS coverage
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
-          flag-name: coveralls-repo-token
-          parallel-finished: true
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./coverage/apps/api
+          publish_branch: gh-pages
+#          cname: ${{ secrets.CNAME }}
+          force_orphan: true
+
+      # Generate test coverage for React
+      - name: Generate React coverage
+        run: npx nx affected --target=test --parallel --max-parallel=4 --exclude=node_modules --exclude=dist --projects=web -- --coverage
+      - name: Publish React coverage
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./coverage/apps/web
+          publish_branch: gh-pages
+#          cname: ${{ secrets.CNAME }}
+          force_orphan: true
+
+      # Generate index.html with menu
+      - name: Generate index.html with menu
+        run: |
+          echo '<html><body><ul><li><a href="./coverage/apps/api/index.html">NestJS Coverage</a></li><li><a href="./coverage/apps/web/index.html">React Coverage</a></li><li><a href="./storybook-static/index.html">Storybook</a></li></ul></body></html>' > index.html
+      - name: Publish index.html
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+#          cname: ${{ secrets.CNAME }}
+          force_orphan: true
