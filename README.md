@@ -1,9 +1,10 @@
 ![img_1.png](server/assets/img_1.png)
 
-
 # Event Manager 2.0
 
 ### Ideas to realize for V2
+
+### PRIORITY: TESTS & TEST COVERAGE 100%
 
 ### DevOps:
 
