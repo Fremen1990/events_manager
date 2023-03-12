@@ -20,36 +20,44 @@ jobs:
       - name: Install @nrwl/nx-linux-x64-gnu
         run: npm install @nrwl/nx-linux-x64-gnu
 
+        # Clean gh-pages branch
+      - name: Clean gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          clean: true
+          publish_branch: gh-pages
+
       # Build and publish Storybook
       - name: Build Storybook
-        run: npx nx affected --target=build-storybook --parallel --max-parallel=4 --exclude=node_modules --exclude=dist
+        run: npx nx build-storybook web
       - name: Publish Storybook
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: ./dist/storybook/web
+          publish_dir: dist/storybook/web
           publish_branch: gh-pages
 
       # Generate test coverage for NestJS
       - name: Generate NestJS coverage
-        run: npx nx affected --target=test --parallel --max-parallel=4 --exclude=node_modules --exclude=dist --projects=api -- --coverage
+        run: npx nx test api --configuration=ci
       - name: Publish NestJS coverage
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: ./coverage/apps/api
+          publish_dir: coverage/apps/api
           publish_branch: gh-pages
 #          cname: ${{ secrets.CNAME }}
           force_orphan: true
 
       # Generate test coverage for React
       - name: Generate React coverage
-        run: npx nx affected --target=test --parallel --max-parallel=4 --exclude=node_modules --exclude=dist --projects=web -- --coverage
+        run: npx nx test web --configuration=ci
       - name: Publish React coverage
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: ./coverage/apps/web
+          publish_dir: coverage/apps/web
           publish_branch: gh-pages
 #          cname: ${{ secrets.CNAME }}
           force_orphan: true
