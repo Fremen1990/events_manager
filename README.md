@@ -19,6 +19,7 @@
 - [x] CD for deployment
 - [ ] DB MySQL on ClearDB Heroku
   https://devcenter.heroku.com/articles/cleardb
+- [ ] Add SonarQube and put link
 - [ ] Deployment on AWS EC2
 - [ ] CD for AWS deployment
 
