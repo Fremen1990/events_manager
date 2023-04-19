@@ -1,0 +1,1 @@
+{"v":4,"entries":{"app--primary":{"id":"app--primary","title":"App","name":"Primary","importPath":"./apps/web/src/app/app.stories.tsx","tags":["story"],"type":"story"},"nxwelcome--primary":{"id":"nxwelcome--primary","title":"NxWelcome","name":"Primary","importPath":"./apps/web/src/app/nx-welcome.stories.tsx","tags":["story"],"type":"story"}}}
