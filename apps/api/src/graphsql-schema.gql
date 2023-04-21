@@ -16,3 +16,18 @@ type User {
 type Query {
   getAllUsers: [User!]!
 }
+
+type Mutation {
+  createUser(user: UserCreateDTO!): User!
+}
+
+input UserCreateDTO {
+  id: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  position: String
+  city: String
+  country: String
+}

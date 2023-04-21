@@ -26,7 +26,12 @@ import { ConfigModule } from '@nestjs/config';
       // username: process.env.USERNAME,
       // password: process.env.PASSWORD,
       // database: process.env.DB_NAME,
-
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'AiFuture2023!',
+      database: 'events_manager_db',
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: true,
