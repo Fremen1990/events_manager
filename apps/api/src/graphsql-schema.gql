@@ -14,5 +14,5 @@ type User {
 }
 
 type Query {
-  findAll: User!
+  getAllUsers: [User!]!
 }
