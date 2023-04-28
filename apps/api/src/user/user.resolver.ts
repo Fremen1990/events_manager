@@ -20,7 +20,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User, { name: 'createUser' })
-  createUser(@Args('user') user: UserCreateDTO) {
+  createUser(@Args('userInput') user: UserCreateDTO) {
     return this.userService.create(user);
   }
 }

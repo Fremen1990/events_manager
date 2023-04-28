@@ -8,7 +8,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as process from 'process';
-import { ConfigModule } from '@nestjs/config';
+// import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { ConfigModule } from '@nestjs/config';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'apps/api/src/graphsql-schema.gql'),
     }),
-    ConfigModule.forRoot(),
+    // ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       // add ConfigModule to work with env variables
       // type: process.env.DB_TYPE as any,
@@ -32,7 +32,7 @@ import { ConfigModule } from '@nestjs/config';
       username: 'postgres',
       password: 'AiFuture2023!',
       database: 'events_manager_db',
-      entities: ['dist/**/*.entity{.ts,.js}'],
+      autoLoadEntities: true,
       synchronize: true,
       logging: true,
     }),
