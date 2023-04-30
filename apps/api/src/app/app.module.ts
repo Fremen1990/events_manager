@@ -8,11 +8,13 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as process from 'process';
+import { EventModule } from '../event/event.module';
 // import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     UserModule,
+    EventModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'apps/api/src/graphsql-schema.gql'),
@@ -41,6 +43,3 @@ import * as process from 'process';
   providers: [AppService],
 })
 export class AppModule {}
-
-//TODO 30:00 Theory
-// https://www.youtube.com/watch?v=_PVA98-ooWA

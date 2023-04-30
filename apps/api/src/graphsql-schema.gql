@@ -2,6 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Event {
+  id: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  title: String!
+  description: String
+  date: String
+  users: [User!]
+}
+
 type User {
   id: String!
   firstName: String!
@@ -11,14 +22,22 @@ type User {
   position: String
   city: String
   country: String
+  event: Event!
+  eventId: String!
 }
 
 type Query {
   getAllUsers: [User!]!
+  getUser(id: String!): User!
+  getAllEvents: [Event!]!
+  event(id: String!): Event!
 }
 
 type Mutation {
   createUser(userInput: UserCreateDTO!): User!
+  createEvent(createEventInput: CreateEventInput!): Event!
+  updateEvent(updateEventInput: UpdateEventInput!): Event!
+  removeEvent(id: String!): Event!
 }
 
 input UserCreateDTO {
@@ -29,4 +48,24 @@ input UserCreateDTO {
   position: String
   city: String
   country: String
+  eventId: String!
+}
+
+input CreateEventInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  title: String!
+  description: String
+  date: String
+}
+
+input UpdateEventInput {
+  firstName: String
+  lastName: String
+  email: String
+  title: String
+  description: String
+  date: String
+  id: String!
 }

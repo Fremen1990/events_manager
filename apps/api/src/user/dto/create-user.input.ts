@@ -16,4 +16,7 @@ export class UserCreateDTO {
   city: string;
   @Field({ nullable: true })
   country: string;
+
+  @Field()
+  eventId: string;
 }
