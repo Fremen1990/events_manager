@@ -9,11 +9,22 @@ import {
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 import { UserCreateDTO } from './dto/create-user.input';
+import { UseGuards } from '@nestjs/common';
+import { CognitoAuthGuard } from '../auth/cognito.guard';
+import { CurrentUser } from '../auth/currentUser.decorator';
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(private userService: UserService) {}
+
+  @Query(() => User, { name: 'me' })
+  @UseGuards(CognitoAuthGuard)
+  whoAmI(@CurrentUser() user: User) {
+    return user;
+  }
+
   @Query(() => [User], { name: 'getAllUsers' })
+  @UseGuards(CognitoAuthGuard)
   findAll() {
     return this.userService.findAll();
   }

@@ -27,6 +27,7 @@ type User {
 }
 
 type Query {
+  me: User!
   getAllUsers: [User!]!
   getUser(id: String!): User!
   getAllEvents: [Event!]!

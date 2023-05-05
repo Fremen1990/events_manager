@@ -9,12 +9,16 @@ import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as process from 'process';
 import { EventModule } from '../event/event.module';
-// import { ConfigModule } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
     UserModule,
     EventModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'apps/api/src/graphsql-schema.gql'),
@@ -38,8 +42,18 @@ import { EventModule } from '../event/event.module';
       synchronize: true,
       logging: true,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+
+//  Pool region: us-east-1
+//  User Pool ID: us-east-1_7GroOpVMM
+
+// APP CLIENT AWS Cognito
+// Client ID: 4g56f6kkicvfu599hkifv2bm6o
+// Client name: App client name
+// username: nairobi
+// password: secret
